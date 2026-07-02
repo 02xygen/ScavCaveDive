@@ -10,92 +10,74 @@ namespace CaveDiver
     public sealed class AspirationStatus : BodyStatus
     {
         public float amount;
-        public bool startedAspirating = false;
-        public bool startedCoughing = false;
+        public bool isOil;
+        public bool aspirating = false;
     }
 
 
     [HarmonyPatch(typeof(Body), "Update")]
     public static class Drowning
     {
-       
-
         [HarmonyPostfix]
         private static void Postfix(Body __instance)
         {
             AspirationStatus status = __instance.GetStatus<AspirationStatus>();
-            if(__instance.alive)
+            if (__instance.alive)
             {
-                if (__instance.bloodOxygen < 30f && __instance.inWater)
+                if (__instance.bloodOxygen < 35f && __instance.inWater)
                 {
-                    if (status.amount <= 0)
-                    {
-                        //Object.Destroy(Object.Instantiate<GameObject>(Resources.Load<GameObject>("vomitBloodParticle"), __instance.limbs[0].transform), 10f);
-                    }
+                    status.amount = Aspirate(status, __instance);
 
-                    status.amount += 200 * Time.deltaTime;
-                    status.amount = Mathf.Clamp(status.amount, 0f, 100f);
+                    if (FluidManager.main.WaterInfo(WorldGeneration.world.WorldToBlockPos(__instance.limbs[0].transform.position)).Item3 > 0)
+                    {
+                        status.isOil = true;
+                        Plugin.Logger.LogError($"In Oil");
+                    }
+                       
+                    else status.isOil = false;
                 }
 
                 else if (status.amount > 0) // Cough up water
                 {
-                    status.amount -= 100 * Time.deltaTime;
-                    status.amount = Mathf.Clamp(status.amount, 0f, 100f);
+                    status.amount = CoughUpLiquid(status, __instance);
                 }
 
-                if (status.amount > 75f)
-                {
-                    MoodleRegistry.AddMoodle(
-                  3,
-                  AssetLoader.LoadEmbeddedSprite("Sprites.aspiration.png", 33.33f),
-                  "Aspiration",
-                  $"Liquid has been inhaled into the lungs, filling them completely. Breathing is impossible, you need fresh air NOW.",
-                  critical: true,
-                  chippedOnly: false,
-                  important: true,
-                  key: "aspiration");
-                }
-
-                else if (status.amount > 50f)
-                {
-                    MoodleRegistry.AddMoodle(
-                  3,
-                  AssetLoader.LoadEmbeddedSprite("Sprites.aspiration.png", 33.33f),
-                  "Aspiration",
-                  $"A large amount of liquid has been inhaled into the lungs. Breathing is nearly impossible.",
-                  critical: false,
-                  chippedOnly: false,
-                  important: true,
-                  key: "aspiration");
-                }
-
-                else if (status.amount > 25f)
-                {
-                    MoodleRegistry.AddMoodle(
-                  2,
-                  AssetLoader.LoadEmbeddedSprite("Sprites.aspiration.png", 33.33f),
-                  "Aspiration",
-                  $"A moderate amount of liquid has been inhaled into the lungs. Breathing is very difficult.",
-                  critical: false,
-                  chippedOnly: false,
-                  important: true,
-                  key: "aspiration");
-                }
-
-                else if (status.amount > 0f)
-                {
-                    MoodleRegistry.AddMoodle(
-                  1,
-                  AssetLoader.LoadEmbeddedSprite("Sprites.aspiration.png", 33.33f),
-                  "Aspiration",
-                  $"A small amount of liquid has been inhaled into the lungs. Breathing is difficult.",
-                  critical: false,
-                  chippedOnly: false,
-                  important: true,
-                  key: "aspiration");
-                }
+                AspirationPatch.manageMoodle(status.amount);
 
             }
+        }
+
+        private static float Aspirate(AspirationStatus status, Body __instance)
+        {
+            if (status.aspirating == false)
+            {
+                status.aspirating = true;
+            }
+
+            status.amount += 150 * Time.deltaTime;
+            status.amount = Mathf.Clamp(status.amount, 0f, 100f);
+
+            return status.amount;
+
+        }
+
+        private static float CoughUpLiquid(AspirationStatus status, Body __instance)
+        {
+            if (status.aspirating == true)
+            {
+                status.aspirating = false;
+                if(status.isOil)
+                {
+                    Object.Destroy(Object.Instantiate<GameObject>(Resources.Load<GameObject>("vomitParticle"), __instance.limbs[0].transform), 10f);
+                }
+                else Object.Destroy(Object.Instantiate<GameObject>(Resources.Load<GameObject>("vomitBloodParticle"), __instance.limbs[0].transform), 10f);
+            }
+
+            status.amount -= 150 * Time.deltaTime;
+            status.amount = Mathf.Clamp(status.amount, 0f, 100f);
+
+            return status.amount;
+
         }
             
     }
