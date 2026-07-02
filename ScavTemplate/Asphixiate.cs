@@ -16,7 +16,7 @@ namespace CaveDiver
         [HarmonyPostfix]
         private static void Postfix(Body __instance)
         {
-            if(__instance.bloodOxygen <= 50f)
+            if(__instance.bloodOxygen <= 75f)
             {
                
             }
