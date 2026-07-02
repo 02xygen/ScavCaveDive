@@ -8,14 +8,14 @@ using HarmonyLib;
 using MonoMod.RuntimeDetour;
 using UnityEngine;
 
-namespace ModNamespace
+namespace CaveDiver
 {
     [BepInPlugin(ModGUID, ModName, ModVersion)]
     public class Plugin : BaseUnityPlugin
     {
-        public const string ModGUID = "modauthor.modname";
-        public const string ModName = "ModName";
-        public const string ModVersion = "0.0.0";
+        public const string ModGUID = "com.O2xymoron.CaveDiver";
+        public const string ModName = "Cave Diver";
+        public const string ModVersion = "0.0.1";
 
         internal static new ManualLogSource Logger;
         private readonly Harmony _harmony = new(ModGUID);
@@ -28,6 +28,11 @@ namespace ModNamespace
 
             _harmony.PatchAll();
             Logger.LogInfo($"Plugin {ModName} is loaded!");
+        }
+
+        void Update()
+        {
+
         }
 
         void OnDestroy()

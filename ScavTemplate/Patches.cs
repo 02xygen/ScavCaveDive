@@ -3,7 +3,7 @@ using BepInEx;
 using HarmonyLib;
 using UnityEngine;
 
-namespace ModNamespace
+namespace CaveDiver
 {
     internal class Patches
     {
@@ -14,7 +14,7 @@ namespace ModNamespace
             [HarmonyPostfix]
             private static void StartPatch()
             {
-                ConsoleScript.instance.LogToConsole("Hello World!");
+                ConsoleScript.instance.LogToConsole("Cave Diver Loaded");
             }
         }
     }
