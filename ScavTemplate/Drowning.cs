@@ -21,7 +21,6 @@ namespace CaveDiver
     [HarmonyPatch(typeof(Body), "Update")]
     public static class Drowning
     {
-        private static bool submergedLastFrame = false;
         [HarmonyPostfix]
         private static void Postfix(Body __instance)
         {

@@ -15,12 +15,6 @@ namespace CaveDiver
     public static class Gasper
     {
         private static bool wasSumberged = false;
-        private static AudioClip gasp;
-        private static void awake()
-        {
-            gasp = AssetLoader.LoadEmbeddedAudio("gasp1.mp3");
-        }
-
 
         [HarmonyPostfix]
         private static void Postfix(Body __instance)
@@ -29,10 +23,10 @@ namespace CaveDiver
 
             else if(!__instance.inWater && wasSumberged)
             {
-                if(__instance.bloodOxygen <= 70)
+                if(__instance.bloodOxygen <= 70 && __instance.GetStatus<AspirationStatus>().amount == 0)
                 {
                     Plugin.Logger.LogError($"GASP");
-                    Sound.Play(gasp, __instance.transform.position, false, true, null, 1f, 1f, false, false);
+                    Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.gasp"), __instance.transform.position, false, true, null, 1f, 1f, false, false);
                 }
                 wasSumberged = false;
             }

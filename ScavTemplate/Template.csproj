@@ -22,6 +22,8 @@
     <None Remove="Sounds\gasp3.mp3" />
     <None Remove="Sounds\gasp4.mp3" />
     <None Remove="Sounds\gaspDeep1.mp3" />
+    <None Remove="Sounds\respExhale.mp3" />
+    <None Remove="Sounds\respInhale.mp3" />
     <None Remove="Sprites\airTank.png" />
     <None Remove="Sprites\aspiration.png" />
     <None Remove="Sprites\aspirationFill.png" />
@@ -35,6 +37,8 @@
     <EmbeddedResource Include="Sounds\gasp3.mp3" />
     <EmbeddedResource Include="Sounds\gasp4.mp3" />
     <EmbeddedResource Include="Sounds\gaspDeep1.mp3" />
+    <EmbeddedResource Include="Sounds\respExhale.mp3" />
+    <EmbeddedResource Include="Sounds\respInhale.mp3" />
     <EmbeddedResource Include="Sprites\airTank.png" />
     <EmbeddedResource Include="Sprites\aspiration.png" />
     <EmbeddedResource Include="Sprites\aspirationFill.png" />

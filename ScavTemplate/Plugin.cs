@@ -27,6 +27,8 @@ namespace CaveDiver
             Instance = this;
 
             _harmony.PatchAll();
+            SoundManager sm = gameObject.AddComponent<SoundManager>();
+            sm.LoadAudio();
             Logger.LogInfo($"Plugin {ModName} is loaded!");
         }
 
