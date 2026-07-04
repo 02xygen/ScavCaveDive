@@ -5,6 +5,8 @@ using HarmonyLib;
 using System.Drawing.Text;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
+
 
 namespace CaveDiver
 {
@@ -118,14 +120,14 @@ namespace CaveDiver
                 return;
             }
 
-            if (body.eyePanicTime > 0f)
+            if (body.eyePanicTime > 0f && body.conscious)
             {
                 Eye eye = __instance.eyeList[4];
                 __instance.eyes.sprite = eye.front;
                 return;
             }
 
-            if (body.eyeScareTime > 0f)
+            if (body.eyeScareTime > 0f && body.conscious)
             {
                 Eye eye = __instance.eyeList[3];
                 __instance.eyes.sprite = eye.front;
@@ -141,6 +143,7 @@ namespace CaveDiver
                 Bubbles.BubbleBurst(__instance.limbs[0].transform);
                 __instance.eyePanicTime = 1f;
                 __instance.eyeScareTime = 2f;
+                Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.drown" + Random.Range(1, 3).ToString()), __instance.transform.position, true, true, null, 1.5f, 1f, false, false);
             }
 
             status.amount += 150 * Time.deltaTime;
@@ -162,6 +165,7 @@ namespace CaveDiver
                     Object.Destroy(Object.Instantiate<GameObject>(Resources.Load<GameObject>("vomitParticle"), __instance.limbs[0].transform), 10f);
                 }
                 else Object.Destroy(Object.Instantiate<GameObject>(Resources.Load<GameObject>("vomitBloodParticle"), __instance.limbs[0].transform), 10f);
+                Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.cough1"), __instance.transform.position, true, true, null, 0.75f, 0.85f);
             }
 
             status.amount -= 150 * Time.deltaTime;

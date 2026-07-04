@@ -22,10 +22,22 @@ namespace CaveDiver
             AssetLoader.CacheAudioClip("caveDiver.respirator.inhale", respInhale);
 
             AudioClip respExhale = AssetLoader.LoadEmbeddedAudio("Sounds.respExhale.mp3");
-            AssetLoader.CacheAudioClip("caveDiver.respirator.exhale", respInhale);
+            AssetLoader.CacheAudioClip("caveDiver.respirator.exhale", respExhale);
 
             AudioClip gasp = AssetLoader.LoadEmbeddedAudio("Sounds.gasp1.mp3");
-            AssetLoader.CacheAudioClip("caveDiver.player.gasp", gasp);
+            AssetLoader.CacheAudioClip("caveDiver.player.gasp1", gasp);
+
+            AudioClip drown = AssetLoader.LoadEmbeddedAudio("Sounds.drown1.mp3");
+            AssetLoader.CacheAudioClip("caveDiver.player.drown1", drown);
+
+            AudioClip drown2 = AssetLoader.LoadEmbeddedAudio("Sounds.drown2.mp3");
+            AssetLoader.CacheAudioClip("caveDiver.player.drown2", drown2);
+
+            AudioClip drown3 = AssetLoader.LoadEmbeddedAudio("Sounds.drown3.mp3");
+            AssetLoader.CacheAudioClip("caveDiver.player.drown3", drown3);
+
+            AudioClip cough1 = AssetLoader.LoadEmbeddedAudio("Sounds.cough1.mp3");
+            AssetLoader.CacheAudioClip("caveDiver.player.cough1", cough1);
         }  
     }
 }

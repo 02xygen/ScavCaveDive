@@ -23,10 +23,9 @@ namespace CaveDiver
 
             else if(!__instance.inWater && wasSumberged)
             {
-                if(__instance.bloodOxygen <= 70 && __instance.GetStatus<AspirationStatus>().amount == 0)
+                if(__instance.bloodOxygen <= 85 && __instance.GetStatus<AspirationStatus>().amount == 0) // Aspiration check not working?
                 {
-                    Plugin.Logger.LogError($"GASP");
-                    Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.gasp"), __instance.transform.position, true, true, null, 1f, 1f, false, false);
+                    Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.gasp1"), __instance.transform.position, true, false, null, 0.5f, 1f, false, false);
                 }
                 wasSumberged = false;
             }

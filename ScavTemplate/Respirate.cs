@@ -19,7 +19,7 @@ namespace CaveDiver
             if(__instance.inWater && __instance.hasScubaGear)
             {
                 float rate = __instance.respiratoryRate;
-                float breathInterval = (rate <= 0f ? 0f : 210f / rate);
+                float breathInterval = (rate <= 0f ? 0f : 180f / rate);
                 if (Time.time - breatheTimer > breathInterval)
                 {
                     if(inhale)

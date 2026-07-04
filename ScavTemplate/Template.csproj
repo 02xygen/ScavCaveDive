@@ -17,6 +17,10 @@
   <Import Project="../vars.targets" />
 
   <ItemGroup>
+    <None Remove="Sounds\cough1.mp3" />
+    <None Remove="Sounds\drown1.mp3" />
+    <None Remove="Sounds\drown2.mp3" />
+    <None Remove="Sounds\drown3.mp3" />
     <None Remove="Sounds\gasp1.mp3" />
     <None Remove="Sounds\gasp2.mp3" />
     <None Remove="Sounds\gasp3.mp3" />
@@ -32,6 +36,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Sounds\cough1.mp3" />
+    <EmbeddedResource Include="Sounds\drown1.mp3" />
+    <EmbeddedResource Include="Sounds\drown2.mp3" />
+    <EmbeddedResource Include="Sounds\drown3.mp3" />
     <EmbeddedResource Include="Sounds\gasp1.mp3" />
     <EmbeddedResource Include="Sounds\gasp2.mp3" />
     <EmbeddedResource Include="Sounds\gasp3.mp3" />

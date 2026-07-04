@@ -51,7 +51,7 @@ namespace CaveDiver
             main.simulationSpace = ParticleSystemSimulationSpace.World;
             main.duration = 0.5f;
 
-            main.startSize = 0.5f;
+            main.startSize = Random.Range(0.3f, 0.5f);
             main.loop = false;
 
             shape.angle = 10f;
