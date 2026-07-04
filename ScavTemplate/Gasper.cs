@@ -26,7 +26,7 @@ namespace CaveDiver
                 if(__instance.bloodOxygen <= 70 && __instance.GetStatus<AspirationStatus>().amount == 0)
                 {
                     Plugin.Logger.LogError($"GASP");
-                    Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.gasp"), __instance.transform.position, false, true, null, 1f, 1f, false, false);
+                    Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.gasp"), __instance.transform.position, true, true, null, 1f, 1f, false, false);
                 }
                 wasSumberged = false;
             }

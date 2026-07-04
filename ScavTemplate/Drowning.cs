@@ -3,6 +3,7 @@ using CUCoreLib.Helpers;
 using CUCoreLib.Registries;
 using HarmonyLib;
 using System.Drawing.Text;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CaveDiver
@@ -25,7 +26,7 @@ namespace CaveDiver
         private static void Postfix(Body __instance)
         {
             AspirationStatus status = __instance.GetStatus<AspirationStatus>();
-            
+
             if (__instance.alive)
             {
                 if (__instance.bloodOxygen < 35f && __instance.inWater)
@@ -37,7 +38,7 @@ namespace CaveDiver
                         status.isOil = true;
                         Plugin.Logger.LogError($"In Oil");
                     }
-                       
+
                     else status.isOil = false;
                 }
 
@@ -47,7 +48,7 @@ namespace CaveDiver
                 }
 
 
-                if(status.aspirating)
+                if (status.aspirating)
                 {
                     __instance.limbs[1].pain = Mathf.Clamp(__instance.limbs[1].pain, 50f, 100f);
                     __instance.limbs[1].muscleHealth -= 2f * Time.deltaTime;
@@ -56,9 +57,80 @@ namespace CaveDiver
 
                 AspirationPatch.manageMoodle(status.amount);
 
+                if(__instance.eyePanicTime > 0 || __instance.eyePanicTime > 0)
+                {
+                    __instance.eyeCloseTime = 0;
+                }
+
             }
         }
 
+        private static readonly Dictionary<Talker, int> lastVisibleCounts = new Dictionary<Talker, int>();
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof (Talker), "Update")]
+
+        private static void talkerPostFix(Talker __instance)
+        {
+            string text = __instance.text.text;
+
+            if (__instance.body.GetStatus<AspirationStatus>().aspirating)
+            {
+                __instance.Skip();
+                __instance.text.text = "";
+            }
+
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                lastVisibleCounts[__instance] = 0;
+                return;
+            }
+
+            int visableCount = text.Length;
+
+            if (!lastVisibleCounts.TryGetValue(__instance, out int lastVisibleCount))
+            {
+                lastVisibleCount = 0;
+            }
+
+            if (visableCount < lastVisibleCount) lastVisibleCount = 0;
+
+            for (int i = lastVisibleCount; i < visableCount; i++)
+            {
+                if(__instance.body.inWater)
+                {
+                    Bubbles.BubbleSingle(__instance.body.limbs[0].transform);
+                }
+                
+            }
+
+            lastVisibleCounts[__instance] = visableCount;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(FacialExpression), "Update")]
+        private static void EyeExpressionPostfix(FacialExpression __instance)
+        {
+
+            Body body = __instance.body;
+            if (!body.inWater)
+            {
+                return;
+            }
+
+            if (body.eyePanicTime > 0f)
+            {
+                Eye eye = __instance.eyeList[4];
+                __instance.eyes.sprite = eye.front;
+                return;
+            }
+
+            if (body.eyeScareTime > 0f)
+            {
+                Eye eye = __instance.eyeList[3];
+                __instance.eyes.sprite = eye.front;
+            }
+        }
 
         // TODO: Add minimum time underwater before aspirating, maybe like 3 seconds or so.
         private static float Aspirate(AspirationStatus status, Body __instance)
@@ -66,7 +138,9 @@ namespace CaveDiver
             if (status.aspirating == false)
             {
                 status.aspirating = true;
-                __instance.eyePanicTime += 1f;
+                Bubbles.BubbleBurst(__instance.limbs[0].transform);
+                __instance.eyePanicTime = 1f;
+                __instance.eyeScareTime = 2f;
             }
 
             status.amount += 150 * Time.deltaTime;

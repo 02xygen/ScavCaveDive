@@ -12,13 +12,15 @@ namespace CaveDiver
     {
         public static bool inhale = true;
         public static float breatheTimer = 0f;
+
         [HarmonyPostfix]
         private static void Postfix(Body __instance)
         {
             if(__instance.inWater && __instance.hasScubaGear)
             {
-                float breathInterval = 30 / __instance.respiratoryRate;
-                if(Time.time - breatheTimer > breathInterval)
+                float rate = __instance.respiratoryRate;
+                float breathInterval = (rate <= 0f ? 0f : 210f / rate);
+                if (Time.time - breatheTimer > breathInterval)
                 {
                     if(inhale)
                     {
@@ -31,9 +33,10 @@ namespace CaveDiver
                     {
                         Plugin.Logger.LogError($"Exhale");
                         Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.respirator.exhale"), __instance.transform.position, true, true, null, 0.75f, 0.85f);
+                        Bubbles.BubbleBurst(__instance.limbs[0].transform);
                         inhale = true;
                     }
-
+                    
                     breatheTimer = Time.time;
                 }
 
