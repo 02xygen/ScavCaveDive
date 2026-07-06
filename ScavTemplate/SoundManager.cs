@@ -18,11 +18,11 @@ namespace CaveDiver
     {
         public void LoadAudio()
         {
-            AudioClip respInhale = AssetLoader.LoadEmbeddedAudio("Sounds.respInhale.mp3");
-            AssetLoader.CacheAudioClip("caveDiver.respirator.inhale", respInhale);
+            AudioClip regInhale = AssetLoader.LoadEmbeddedAudio("Sounds.regInhale.mp3");
+            AssetLoader.CacheAudioClip("caveDiver.regulator.inhale", regInhale);
 
-            AudioClip respExhale = AssetLoader.LoadEmbeddedAudio("Sounds.respExhale.mp3");
-            AssetLoader.CacheAudioClip("caveDiver.respirator.exhale", respExhale);
+            AudioClip regExhale = AssetLoader.LoadEmbeddedAudio("Sounds.regExhale.mp3");
+            AssetLoader.CacheAudioClip("caveDiver.regulator.exhale", regExhale);
 
             AudioClip gasp = AssetLoader.LoadEmbeddedAudio("Sounds.gasp1.mp3");
             AssetLoader.CacheAudioClip("caveDiver.player.gasp1", gasp);

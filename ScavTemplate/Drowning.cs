@@ -13,7 +13,7 @@ namespace CaveDiver
     [StatusOptions(Key = "com.O2xymoron.aspiration", SaveEnabled = true)]
     public sealed class AspirationStatus : BodyStatus
     {
-        public float amount;
+        public float amount = 0;
         public bool isOil;
         public bool aspirating = false;
         public float minBreathHoldTimer = 0f;
@@ -31,23 +31,33 @@ namespace CaveDiver
 
             if (__instance.alive)
             {
-                if (__instance.bloodOxygen < 35f && __instance.inWater)
+                if (__instance.bloodOxygen < 40f && __instance.inWater)
                 {
-                    status.amount = Aspirate(status, __instance);
-
-                    if (FluidManager.main.WaterInfo(WorldGeneration.world.WorldToBlockPos(__instance.limbs[0].transform.position)).Item3 == 3)
+                    if(__instance.hasScubaGear && status.amount >= 0) // MIGHT HAVE ISSUES
                     {
-                        status.isOil = true;
-                        Plugin.Logger.LogError($"In Oil");
+                        status.amount = CoughUpLiquid(status, __instance);
                     }
 
-                    else status.isOil = false;
+                    else
+                    {
+                        status.amount = Aspirate(status, __instance);
+
+                        if (FluidManager.main.WaterInfo(WorldGeneration.world.WorldToBlockPos(__instance.limbs[0].transform.position)).Item3 == 3)
+                        {
+                            status.isOil = true;
+                            Plugin.Logger.LogError($"In Oil");
+                        }
+                        else status.isOil = false;
+                    }
+                    
                 }
 
-                else if (status.amount > 0) // Cough up water
+                else if (status.amount > 0 && __instance.conscious && __instance.limbs[1].muscleHealth > 5f) // Cough up water
                 {
                     status.amount = CoughUpLiquid(status, __instance);
                 }
+
+
 
 
                 if (status.aspirating)
@@ -75,8 +85,10 @@ namespace CaveDiver
         private static void talkerPostFix(Talker __instance)
         {
             string text = __instance.text.text;
+            if (__instance?.body == null) return;
+            AspirationStatus status = __instance.body.GetStatus<AspirationStatus>();
 
-            if (__instance.body.GetStatus<AspirationStatus>().aspirating)
+            if (status.amount > 0)
             {
                 __instance.Skip();
                 __instance.text.text = "";

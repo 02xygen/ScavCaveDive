@@ -15,7 +15,7 @@ namespace CaveDiver
     {
         public const string ModGUID = "com.O2xymoron.CaveDiver";
         public const string ModName = "Cave Diver";
-        public const string ModVersion = "0.0.1";
+        public const string ModVersion = "0.0.2";
 
         internal static new ManualLogSource Logger;
         private readonly Harmony _harmony = new(ModGUID);
@@ -29,9 +29,13 @@ namespace CaveDiver
             _harmony.PatchAll();
             SoundManager sm = gameObject.AddComponent<SoundManager>();
             sm.LoadAudio();
+            RegisterItems ri = gameObject.AddComponent<RegisterItems>();
+       
             Logger.LogInfo($"Plugin {ModName} is loaded!");
         }
 
+           
+        
         void Update()
         {
 
