@@ -57,7 +57,7 @@ namespace CaveDiver
                 slotRotation = 0f,
                 usable = false,
                 usableOnLimb = false,
-                decayMinutes = 180f,
+                decayMinutes = 60f,
                 destroyAtZeroCondition = true,
                 decayInfo = (byte)(
               ItemInfo.DecayType.NoDecayWhenNotWorn |
@@ -81,7 +81,7 @@ namespace CaveDiver
 				slotRotation = 0f,
 				usable = false,
 				usableOnLimb = false,
-				decayMinutes = 240f,
+				decayMinutes = 180f,
 				tags = "cangetwet",
 				destroyAtZeroCondition = true,
 				decayInfo = (byte)(
@@ -113,7 +113,7 @@ namespace CaveDiver
                 slotRotation = 0f,
                 usable = true,
                 usableOnLimb = false,
-                decayMinutes = 240f,
+                decayMinutes = 180f,
                 destroyAtZeroCondition = true,
                 decayInfo = (byte)(
                 ItemInfo.DecayType.NoDecayWhenNotWorn |
@@ -142,7 +142,7 @@ namespace CaveDiver
                 slotRotation = 0f,
                 usable = false,
                 usableOnLimb = false,
-                decayMinutes = 180f,
+                decayMinutes = 80f,
                 destroyAtZeroCondition = true,
                 decayInfo = (byte)(
                 ItemInfo.DecayType.NoDecayWhenNotWorn |
@@ -171,7 +171,7 @@ namespace CaveDiver
                 slotRotation = 0f,
                 usable = false,
                 usableOnLimb = false,
-                decayMinutes = 180f,
+                decayMinutes = 80f,
                 destroyAtZeroCondition = true,
                 decayInfo = (byte)(
                ItemInfo.DecayType.NoDecayWhenNotWorn |
@@ -224,7 +224,7 @@ namespace CaveDiver
                 slotRotation = 0f,
                 usable = false,
                 usableOnLimb = false,
-                decayMinutes = 240f,
+                decayMinutes = 180f,
                 Battery = new BatteryProperties
                 {
                     Preset = BatteryItem.BatteryPreset.Large
@@ -256,22 +256,23 @@ namespace CaveDiver
             }.AddSpawnComponent<Rebreather>(), rebreatherTorsoSprite);
 
             ItemRegistry.Register("airbladder", new CustomItemInfo // PROBLEM CAN BE USED TO RAPIDLY REGAN STAMINA / SPo2 out of the water since it can be used multiple times.
-                                                                   // Mabye make it a one use thing and reduce the material cost?
+                                                                   // OPTION 1 make it a one use thing and reduce the material cost?
+                                                                   // OPTION 2 make it cost stamina and Spo2 to inflate ensentailly "storing" it for later use
             {
                 fullName = "Air Bladder",
-                description = "A simple bladder featuring a hand pump and quick release valve. Holds a lungful of air that can be breathed in emergency situations. One time use.",
+                description = "A simple gas bladder featuring a quick release valve. Holds a lungful of air that can be breathed in emergency situations, restoring stamina and slightly boosting Spo2. One time use.",
                 category = "utility",
                 slotRotation = 0f,
                 usable = true,
                 usableOnLimb = false,
-                decayMinutes = 120f,
+                decayMinutes = 80f,
                 destroyAtZeroCondition = true,
                 weight = 0.2f,
                 value = 10,
                 useAction = (body, item) =>
                 {
                      body.bloodOxygen += 3f;
-                     body.stamina += 5f;
+                     body.stamina += 10f;
                      Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.regulator.inhale"), body.transform.position, true, true, null, 0.75f, 0.85f);
                      item.SetCondition(0f);
                     

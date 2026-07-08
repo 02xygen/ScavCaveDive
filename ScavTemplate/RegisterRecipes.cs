@@ -40,7 +40,6 @@ namespace CaveDiver
                 new RecipeItem(0f) { specific = true, specificId = "rope" },
                 new RecipeItem(0f) { specific = true, specificId = "plasticchunk" },
                 new RecipeItem(0f) { specific = true, specificId = "flexiglass" },
-                new RecipeItem(0f) { specific = true, specificId = "string" },
                 new RecipeItem(25f) { specific = true, specificId = "biochem", isLiquid = true }
             }
             });
@@ -58,12 +57,11 @@ namespace CaveDiver
                 },
                 items = new List<RecipeItem>
             {
-                new RecipeItem() { specific = true, specificId = "rope" },
-                new RecipeItem() { specific = true, specificId = "plasticchunk" },
-                new RecipeItem() { specific = true, specificId = "plasticchunk" },
-                new RecipeItem() { specific = true, specificId = "flexiglass" },
-                new RecipeItem() { specific = true, specificId = "flexiglass" },
-                new RecipeItem(0f) { specific = true, specificId = "string" },
+                new RecipeItem(0f) { specific = true, specificId = "rope" },
+                new RecipeItem(0f) { specific = true, specificId = "plasticchunk" },
+                new RecipeItem(0f) { specific = true, specificId = "plasticchunk" },
+                new RecipeItem(0f) { specific = true, specificId = "flexiglass" },
+                new RecipeItem(0f) { specific = true, specificId = "flexiglass" },
                 new RecipeItem(40f) { specific = true, specificId = "biochem", isLiquid = true },
                 new RecipeItem(0f){ quality = "cutting", destroyItem = false }
             }
@@ -82,14 +80,14 @@ namespace CaveDiver
                 },
                 items = new List<RecipeItem>
             {
-                new RecipeItem() { specific = true, specificId = "plasticchunk" },
-                new RecipeItem() { specific = true, specificId = "plasticchunk" },
-                new RecipeItem() { specific = true, specificId = "plasticchunk" },
-                new RecipeItem() { specific = true, specificId = "plasticchunk" },
-                new RecipeItem() { specific = true, specificId = "canvas" },
-                new RecipeItem() { specific = true, specificId = "canvas" },
-                new RecipeItem() { specific = true, specificId = "canvas" },
-                new RecipeItem() { specific = true, specificId = "canvas" },
+                new RecipeItem(0f) { specific = true, specificId = "plasticchunk" },
+                new RecipeItem(0f) { specific = true, specificId = "plasticchunk" },
+                new RecipeItem(0f) { specific = true, specificId = "plasticchunk" },
+                new RecipeItem(0f) { specific = true, specificId = "plasticchunk" },
+                new RecipeItem(0f) { specific = true, specificId = "canvas" },
+                new RecipeItem(0f) { specific = true, specificId = "canvas" },
+                new RecipeItem(0f) { specific = true, specificId = "canvas" },
+                new RecipeItem(0f) { specific = true, specificId = "canvas" },
                 new RecipeItem(40f) { specific = true, specificId = "biochem", isLiquid = true },
                 new RecipeItem(0f){ quality = "cutting", destroyItem = false }
             }
@@ -108,11 +106,11 @@ namespace CaveDiver
                 },
                 items = new List<RecipeItem>
             {
-                new RecipeItem() { specific = true, specificId = "airbladder" },
-                new RecipeItem() { specific = true, specificId = "airbladder" },
-                new RecipeItem() { specific = true, specificId = "canvas" },
-                new RecipeItem() { specific = true, specificId = "canvas" },
-                new RecipeItem(0.25f) { specific = true, specificId = "belt" },
+                new RecipeItem(0f) { specific = true, specificId = "airbladder" },
+                new RecipeItem(0f) { specific = true, specificId = "airbladder" },
+                new RecipeItem(0f) { specific = true, specificId = "canvas" },
+                new RecipeItem(0f) { specific = true, specificId = "canvas" },
+                new RecipeItem(0f) { specific = true, specificId = "belt" },
                 new RecipeItem(30f) { specific = true, specificId = "biochem", isLiquid = true },
                 new RecipeItem(0f){ quality = "cutting", destroyItem = false }
             }
@@ -131,12 +129,11 @@ namespace CaveDiver
                 },
                 items = new List<RecipeItem>
             {
-                new RecipeItem() { specific = true, specificId = "plasticchunk" },
-                new RecipeItem() { specific = true, specificId = "flexiglass" },
-                new RecipeItem() { specific = true, specificId = "flexiglass" },
-                new RecipeItem() { specific = true, specificId = "scraptube" },
-                new RecipeItem(10f) { specific = true, specificId = "biochem", isLiquid = true },
-                new RecipeItem(0f){ quality = "cutting", destroyItem = false }
+                new RecipeItem(0f) { specific = true, specificId = "plasticchunk" },
+                new RecipeItem(0f) { specific = true, specificId = "flexiglass" },
+                new RecipeItem(0f) { specific = true, specificId = "flexiglass" },
+                new RecipeItem(0f) { specific = true, specificId = "scraptube" },
+                new RecipeItem(20f) { specific = true, specificId = "biochem", isLiquid = true },
             }
             });
         }

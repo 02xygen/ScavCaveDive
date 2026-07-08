@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CaveDiver
 {
@@ -35,7 +36,8 @@ namespace CaveDiver
             }
         }
 
-        [HarmonyPatch(typeof(Body), "HandleCirculation")]
+        [HarmonyPatch(typeof(Body), "HandleCirculation")] // For any scuba reliant functions we need a prefix that checks current
+                                                          // equipped items and sets hasScubaGear to either true or false;
         public static class RespirationPatch
         {
             [HarmonyPrefix]
@@ -45,32 +47,20 @@ namespace CaveDiver
                     if (__instance.GetWearable("rebreather") != null) __instance.hasScubaGear = true;
                     if (__instance.GetWearable("scubadivinggear") != null) __instance.hasScubaGear = true;
             }
-
-            [HarmonyPostfix]
-            private static void Postfix(Body __instance)
-            {
-                __instance.hasScubaGear = false;
-            }
         }
 
 
-        //[HarmonyPatch(typeof(Talker), "Update")]
-       // public static class TalkerPatch // Causes null reference error
-       // {
-       //     [HarmonyPrefix]
-       //     private static void Prefix(Talker __instance)
-        //    {
-        //        if (__instance.body.GetWearable("airtank") != null) __instance.body.hasScubaGear = true;
-       //         if (__instance.body.GetWearable("rebreather") != null) __instance.body.hasScubaGear = true;
-       //         if (__instance.body.GetWearable("scubadivinggear") != null) __instance.body.hasScubaGear = true;
-       //     }
-
-        //    [HarmonyPostfix]
-        //    private static void Postfix(Talker __instance)
-        //    {
-        //        __instance.body.hasScubaGear = false;
-       //     }
-      // }
+        [HarmonyPatch(typeof(Talker), "Update")]
+        public static class TalkerPatch // Causes null reference error
+        {
+            [HarmonyPrefix]
+            private static void Prefix(Talker __instance)
+            {
+               if (__instance.body.GetWearable("airtank") != null) __instance.body.hasScubaGear = true;
+                if (__instance.body.GetWearable("rebreather") != null) __instance.body.hasScubaGear = true;
+                if (__instance.body.GetWearable("scubadivinggear") != null) __instance.body.hasScubaGear = true;
+            }
+        }
 
 
         [HarmonyPatch(typeof(PlayerCamera), "HandleScreenShaders")]
@@ -90,18 +80,40 @@ namespace CaveDiver
         public static class WgFloodPatch
         {
             [HarmonyPrefix]
-            private static bool Prefix(WorldGeneration __instance) // MAYBE WORKING???
-                                                                   // ALSO NEED TO DISABLE LUMIAGLAE IT CAN CREATE UNWINNABLE SCENARIOS.
+            private static bool Prefix(WorldGeneration __instance) // Maybe make a "super flooded modifier, though lumalgae spawns will have to be removed as they can cause impossible scenarios."
             {
                 var flooded = LayerModifier.availableModifiers[5];
-                var flooded2 = LayerModifier.availableModifiers[5];
                 flooded.Initialize(__instance);
-                flooded2.Initialize(__instance);
                 flooded.active = true;
-                flooded2.active = true;
                 __instance.layerPrefix = Locale.GetOther("layermodifier5");
                 __instance.layerDescription = Locale.GetOther("layermodifier5dsc");
                 return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(WoundView), "Awake")]
+        public static class AspirationFillBuilderPatch
+        {
+            [HarmonyPostfix]
+            private static void Postfix(WoundView __instance)
+            {
+                FilledImagePP aspirationFill = UnityEngine.Object.Instantiate(__instance.hemothoraxFill);
+                aspirationFill.name = "AspirationFill";
+                aspirationFill.transform.SetParent(GameObject.Find("Main Camera/Canvas/WoundView/StatMenu").transform, false);
+                aspirationFill.GetComponent<Image>().sprite = AssetLoader.LoadEmbeddedSprite("aspirationFill.png");
+                aspirationFill.fillAmount = 1.0f;
+            }
+        }
+
+        [HarmonyPatch(typeof(WoundView), "UpdateView")]
+        public static class AspirationFillPatch
+        {
+            [HarmonyPostfix]
+            private static void Postfix(WoundView __instance)
+            {
+                // Probably very expensive Need alternate way to get component
+                GameObject.Find("Main Camera/Canvas/WoundView/StatMenu/AspirationFill").GetComponent<FilledImagePP>().fillAmount 
+                    = __instance.body.GetStatus<AspirationStatus>().amount / 100f;
             }
         }
     }

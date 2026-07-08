@@ -6,6 +6,7 @@ using System.Drawing.Text;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
+using System.Runtime.Remoting.Messaging;
 
 
 namespace CaveDiver
@@ -23,21 +24,34 @@ namespace CaveDiver
     [HarmonyPatch(typeof(Body), "Update")]
     public static class Drowning
     {
+        static bool wasSubmerged = false;
+        static bool canAspirate = false;
+        static bool canCough = false;
+        static float timeWhenSubmerged;
+        static float timeWhenSurfaced;
+
         [HarmonyPostfix]
         private static void Postfix(Body __instance)
         {
             AspirationStatus status = __instance.GetStatus<AspirationStatus>();
+            
 
             if (__instance.alive)
             {
+                HandleBreathHoldTime(__instance);
+                HandleBreathHoldTime(__instance);
+                HandleGasp(__instance);
+
                 if (__instance.bloodOxygen < 45f && __instance.inWater)
                 {
-                    if(__instance.GetWearable("airtank") != null || __instance.GetWearable("rebreather") != null && status.amount >= 0) // MIGHT HAVE ISSUES
+                    if(__instance.GetWearable("airtank") != null || __instance.GetWearable("rebreather") != null
+                        || __instance.GetWearable("scubadivinggear") != null && status.amount >= 0
+                        && __instance.conscious && __instance.limbs[1].muscleHealth > 5f) // MIGHT HAVE ISSUES
                     {
                         status.amount = CoughUpLiquid(status, __instance);
                     }
 
-                    else
+                    else if(canAspirate)
                     {
                         status.amount = Aspirate(status, __instance);
                         // Add logic for saving aspirated liquid color
@@ -45,7 +59,7 @@ namespace CaveDiver
                     
                 }
 
-                else if (status.amount > 0 && __instance.conscious && __instance.limbs[1].muscleHealth > 5f) // Cough up water
+                else if (status.amount > 0 && __instance.conscious && __instance.limbs[1].muscleHealth > 5f && canCough) // Cough up water
                 {
                     status.amount = CoughUpLiquid(status, __instance);
                 }
@@ -55,8 +69,10 @@ namespace CaveDiver
 
                 if (status.aspirating)
                 {
-                    __instance.limbs[1].pain = Mathf.Clamp(__instance.limbs[1].pain, 50f, 100f);
-                    __instance.limbs[1].muscleHealth -= 3f * Time.deltaTime;
+                    __instance.limbs[1].pain = Mathf.Clamp(__instance.limbs[1].pain, 40f, 100f);
+                    if(__instance.limbs[1].muscleHealth > 6) __instance.limbs[1].muscleHealth -= 3f * Time.deltaTime;
+                    else __instance.limbs[1].muscleHealth -= 0.5f * Time.deltaTime;
+
                     __instance.breathing = false;
                 }
 
@@ -149,7 +165,7 @@ namespace CaveDiver
             }
         }
 
-        // TODO: Add minimum time underwater before aspirating, maybe like 3 seconds or so.
+       
         private static float Aspirate(AspirationStatus status, Body __instance)
         {
             if (status.aspirating == false)
@@ -170,13 +186,18 @@ namespace CaveDiver
         }
 
 
-        // TODO: Add minimum time above water before clearing lungs, maybe half a second or so.
+        
         private static float CoughUpLiquid(AspirationStatus status, Body __instance)
         {
             if (status.aspirating == true)
             {
                 status.aspirating = false;
-                CoughParticles.Burst(__instance.limbs[0].transform, Color.blue);
+                GameObject particles = Object.Instantiate<GameObject>(Resources.Load<GameObject>("vomitParticle"), __instance.limbs[0].transform);
+                BleedParticle bleedParticles = particles.GetComponent<BleedParticle>();
+                ParticleSystem.MainModule main = particles.GetComponent<ParticleSystem>().main;
+                main.startColor = new Color(0.39f, 0.49f, 0.78f, 0.72f);
+                bleedParticles.enabled = false;
+                Object.Destroy(particles, 10f);
                 Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.cough1"), __instance.transform.position, true, true, null, 0.75f, 0.85f);
             }
 
@@ -185,6 +206,42 @@ namespace CaveDiver
 
             return status.amount;
 
+        }
+
+        private static void HandleGasp(Body __instance)
+        {
+            if (!__instance.inWater && Drowning.wasSubmerged)
+            {
+                if (__instance.bloodOxygen <= 90 && __instance.GetStatus<AspirationStatus>().amount == 0) // Aspiration check not working?
+                {
+                    Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.gasp" + Random.Range(2, 4).ToString()), __instance.transform.position, true, false, null, 0.5f, 1f, false, false);
+                }
+            }
+        }
+
+        private static void HandleBreathHoldTime(Body __instance)
+        {
+            float minBreathHoldTime = 5.0f;
+            float minCoughTime = 0.25f;
+
+            if (__instance.inWater && !Drowning.wasSubmerged)
+            {
+                Drowning.wasSubmerged = true;
+                Drowning.timeWhenSubmerged = Time.time;
+            }
+
+            else if(!__instance.inWater && Drowning.wasSubmerged)
+            {
+                Drowning.wasSubmerged = false;
+                Drowning.timeWhenSurfaced = Time.time;
+            }
+
+            if (Time.time - Drowning.timeWhenSubmerged > minBreathHoldTime) Drowning.canAspirate = true;
+            else Drowning.canAspirate = false;
+
+            if (Time.time - Drowning.timeWhenSurfaced > minCoughTime) Drowning.canCough = true;
+            else Drowning.canCough = false;
+            
         }
             
     }
