@@ -26,11 +26,8 @@ namespace CaveDiver
             Body body = wornLimb.body;
             if (body == null) return;
 
-            // Add screen blur logic
-
             // Add waterlog logic
 
-            // Add clear action logic
         }
     }
 }

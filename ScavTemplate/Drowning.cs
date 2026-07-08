@@ -5,7 +5,7 @@ using HarmonyLib;
 using System.Drawing.Text;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
+using UnityEngine.XR;
 
 
 namespace CaveDiver
@@ -14,7 +14,6 @@ namespace CaveDiver
     public sealed class AspirationStatus : BodyStatus
     {
         public float amount = 0;
-        public bool isOil;
         public bool aspirating = false;
         public float minBreathHoldTimer = 0f;
         public float minSurfaceTimer = 0f;
@@ -31,9 +30,9 @@ namespace CaveDiver
 
             if (__instance.alive)
             {
-                if (__instance.bloodOxygen < 40f && __instance.inWater)
+                if (__instance.bloodOxygen < 45f && __instance.inWater)
                 {
-                    if(__instance.hasScubaGear && status.amount >= 0) // MIGHT HAVE ISSUES
+                    if(__instance.GetWearable("airtank") != null || __instance.GetWearable("rebreather") != null && status.amount >= 0) // MIGHT HAVE ISSUES
                     {
                         status.amount = CoughUpLiquid(status, __instance);
                     }
@@ -41,13 +40,7 @@ namespace CaveDiver
                     else
                     {
                         status.amount = Aspirate(status, __instance);
-
-                        if (FluidManager.main.WaterInfo(WorldGeneration.world.WorldToBlockPos(__instance.limbs[0].transform.position)).Item3 == 3)
-                        {
-                            status.isOil = true;
-                            Plugin.Logger.LogError($"In Oil");
-                        }
-                        else status.isOil = false;
+                        // Add logic for saving aspirated liquid color
                     }
                     
                 }
@@ -63,7 +56,7 @@ namespace CaveDiver
                 if (status.aspirating)
                 {
                     __instance.limbs[1].pain = Mathf.Clamp(__instance.limbs[1].pain, 50f, 100f);
-                    __instance.limbs[1].muscleHealth -= 2f * Time.deltaTime;
+                    __instance.limbs[1].muscleHealth -= 3f * Time.deltaTime;
                     __instance.breathing = false;
                 }
 
@@ -111,7 +104,7 @@ namespace CaveDiver
 
             for (int i = lastVisibleCount; i < visableCount; i++)
             {
-                if(__instance.body.inWater)
+                if(__instance.body.inWater && __instance.body.GetWearable("rebreather") == null)
                 {
                     Bubbles.BubbleSingle(__instance.body.limbs[0].transform);
                 }
@@ -129,6 +122,16 @@ namespace CaveDiver
             Body body = __instance.body;
             if (!body.inWater)
             {
+                return;
+            }
+
+            if (__instance.body.eyeGone)
+            {
+                __instance.eyeTimeHealed += Time.deltaTime;
+                if (__instance.body.isRight || __instance.body.bothEyesGone)
+                {
+                    __instance.eyes.sprite = ((__instance.eyeTimeHealed > 350f) ? __instance.eyesGoneHealed : __instance.eyesGone);
+                }
                 return;
             }
 
@@ -151,11 +154,12 @@ namespace CaveDiver
         {
             if (status.aspirating == false)
             {
+                
                 status.aspirating = true;
                 Bubbles.BubbleBurst(__instance.limbs[0].transform);
                 __instance.eyePanicTime = 1f;
                 __instance.eyeScareTime = 2f;
-                Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.drown" + Random.Range(1, 3).ToString()), __instance.transform.position, true, true, null, 1.5f, 1f, false, false);
+                Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.drown" + Random.Range(1, 3).ToString()), __instance.transform.position, true, true, null, 6.0f, 1f, false, false);
             }
 
             status.amount += 150 * Time.deltaTime;
@@ -172,11 +176,7 @@ namespace CaveDiver
             if (status.aspirating == true)
             {
                 status.aspirating = false;
-                if(status.isOil)
-                {
-                    Object.Destroy(Object.Instantiate<GameObject>(Resources.Load<GameObject>("vomitParticle"), __instance.limbs[0].transform), 10f);
-                }
-                else Object.Destroy(Object.Instantiate<GameObject>(Resources.Load<GameObject>("vomitBloodParticle"), __instance.limbs[0].transform), 10f);
+                CoughParticles.Burst(__instance.limbs[0].transform, Color.blue);
                 Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.cough1"), __instance.transform.position, true, true, null, 0.75f, 0.85f);
             }
 

@@ -22,9 +22,8 @@ namespace CaveDiver
             try { ContentReloadManager.EnableHotReload("com.O2xymoron.CaveDiver"); CreateItems(); } catch (Exception e) { Debug.Log(e); }
         }
 
-		void CreateItems()
+		void CreateItems() // TODO: MAKE DIVING BELT ITEM THAT DECREASES BOUYANCY.
         {
-			Sprite wetsuitSprite = AssetLoader.LoadEmbeddedSprite("wetsuitUpTorso.png");
 			Sprite wetsuitTorsoSprite = AssetLoader.LoadEmbeddedSprite("wetsuitUpTorso.png");
 			Sprite wetsuitDownTorsoSprite = AssetLoader.LoadEmbeddedSprite("wetsuitDownTorso.png");
 			Sprite wetsuitUpArmSprite = AssetLoader.LoadEmbeddedSprite("wetsuitUpArm.png");
@@ -45,18 +44,20 @@ namespace CaveDiver
 			Sprite rebreatherHeadSprite = AssetLoader.LoadEmbeddedSprite("rebreatherHead.png");
 
 			Sprite airBladderFullSprite = AssetLoader.LoadEmbeddedSprite("airBladder.png");
-			Sprite airBladderEmptySprite = AssetLoader.LoadEmbeddedSprite("airBladderEmpty.png");
+			Sprite wetsuitSprite = AssetLoader.LoadEmbeddedSprite("wetsuitIcon.png");
+			Sprite swimGogglesSprite = AssetLoader.LoadEmbeddedSprite("swimGogglesIcon.png");
+			Sprite divingMaskSprite = AssetLoader.LoadEmbeddedSprite("divingMaskIcon.png");
 
 
             ItemRegistry.Register("lifevest", new CustomItemInfo
             {
                 fullName = "Life Vest",
-                description = "A wearable device that greatly increases bouyancy. Keeps you afloat in liquids.",
+                description = "A wearable device that greatly increases bouyancy. Keeps you afloat in liquids. Is much more effective if you relax your body (ragdoll).",
                 category = "utility",
                 slotRotation = 0f,
                 usable = false,
                 usableOnLimb = false,
-                decayMinutes = 480f,
+                decayMinutes = 180f,
                 destroyAtZeroCondition = true,
                 decayInfo = (byte)(
               ItemInfo.DecayType.NoDecayWhenNotWorn |
@@ -80,7 +81,7 @@ namespace CaveDiver
 				slotRotation = 0f,
 				usable = false,
 				usableOnLimb = false,
-				decayMinutes = 480f,
+				decayMinutes = 240f,
 				tags = "cangetwet",
 				destroyAtZeroCondition = true,
 				decayInfo = (byte)(
@@ -112,7 +113,7 @@ namespace CaveDiver
                 slotRotation = 0f,
                 usable = true,
                 usableOnLimb = false,
-                decayMinutes = 480f,
+                decayMinutes = 240f,
                 destroyAtZeroCondition = true,
                 decayInfo = (byte)(
                 ItemInfo.DecayType.NoDecayWhenNotWorn |
@@ -131,7 +132,7 @@ namespace CaveDiver
                     ["waterlogAmount"] = 0f
                 },
                 WornSprite = diveMaskWornSprite,
-            }.AddSpawnComponent<DivingMask>(), diveMaskWornSprite);
+            }.AddSpawnComponent<DivingMask>(), divingMaskSprite);
 
             ItemRegistry.Register("swimgoggles", new CustomItemInfo
             {
@@ -141,7 +142,7 @@ namespace CaveDiver
                 slotRotation = 0f,
                 usable = false,
                 usableOnLimb = false,
-                decayMinutes = 480f,
+                decayMinutes = 180f,
                 destroyAtZeroCondition = true,
                 decayInfo = (byte)(
                 ItemInfo.DecayType.NoDecayWhenNotWorn |
@@ -160,7 +161,7 @@ namespace CaveDiver
                     ["waterlogAmount"] = 0f
                 },
                 WornSprite = swimGogglesWornSprite,
-            }.AddSpawnComponent<SwimGoggles>(), swimGogglesWornSprite);
+            }.AddSpawnComponent<SwimGoggles>(), swimGogglesSprite);
 
             ItemRegistry.Register("makeshiftfins", new CustomItemInfo
             {
@@ -170,7 +171,7 @@ namespace CaveDiver
                 slotRotation = 0f,
                 usable = false,
                 usableOnLimb = false,
-                decayMinutes = 480f,
+                decayMinutes = 180f,
                 destroyAtZeroCondition = true,
                 decayInfo = (byte)(
                ItemInfo.DecayType.NoDecayWhenNotWorn |
@@ -254,40 +255,26 @@ namespace CaveDiver
                WornSprite = rebreatherTorsoSprite,
             }.AddSpawnComponent<Rebreather>(), rebreatherTorsoSprite);
 
-            ItemRegistry.Register("airbladder", new CustomItemInfo
+            ItemRegistry.Register("airbladder", new CustomItemInfo // PROBLEM CAN BE USED TO RAPIDLY REGAN STAMINA / SPo2 out of the water since it can be used multiple times.
+                                                                   // Mabye make it a one use thing and reduce the material cost?
             {
                 fullName = "Air Bladder",
-                description = "A simple bladder featuring a hand pump and quick release valve. Can be used to hold a lungful of air, it might save your life. Use when empty to fill with air (only when exposed to air), and to breathe the stored air when full.",
+                description = "A simple bladder featuring a hand pump and quick release valve. Holds a lungful of air that can be breathed in emergency situations. One time use.",
                 category = "utility",
                 slotRotation = 0f,
                 usable = true,
                 usableOnLimb = false,
-                decayMinutes = 240f,
+                decayMinutes = 120f,
                 destroyAtZeroCondition = true,
                 weight = 0.2f,
                 value = 10,
-                CustomData =
-                {
-                    ["HasAir"] = true
-                },
-
                 useAction = (body, item) =>
                 {
-                    if (ItemRegistry.TryGetCustomData<bool>(item, "HasAir", out bool hasAir) == true) // NOT WORKING
-                    {
-                        body.bloodOxygen += 5f;
-                        body.stamina += 5f;
-                        hasAir = false;
-                        item.GetComponent<SpriteRenderer>().sprite = airBladderEmptySprite;
-                        Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.regulator.inhale"), body.transform.position, true, true, null, 0.75f, 0.85f);
-                    }
-
-                    else if (body.inWater == false)
-                    {
-                        hasAir = true;
-                        item.GetComponent<SpriteRenderer>().sprite = airBladderFullSprite;
-                        Sound.Play("spray", body.transform.position, false, true, null, 1f, 1f, false, false);
-                    }
+                     body.bloodOxygen += 3f;
+                     body.stamina += 5f;
+                     Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.regulator.inhale"), body.transform.position, true, true, null, 0.75f, 0.85f);
+                     item.SetCondition(0f);
+                    
                 },
             }, airBladderFullSprite);
 

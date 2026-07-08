@@ -20,8 +20,14 @@ namespace CaveDiver
 
             if (liquid != 0 && PlayerCamera.main.body.HasWearable("lifevest"))
             {
-                PlayerCamera.main.body.rb.AddForce(Vector2.up * 3000);
-                if(!PlayerCamera.main.body.standing) PlayerCamera.main.body.limbs[0].rb.AddForce(Vector2.up * 1000);
+
+                if (!PlayerCamera.main.body.standing)
+                {
+                    PlayerCamera.main.body.rb.AddForce(Vector2.up * 3000);
+                    PlayerCamera.main.body.limbs[0].rb.AddForce(Vector2.up * 1000);
+                }
+                else PlayerCamera.main.body.rb.velocity += Vector2.up * 2.0f;
+
                 return;
             }
 
@@ -30,7 +36,7 @@ namespace CaveDiver
 
             if (liquid != 0)
             {
-                Debug.Log("Float");
+                GetComponent<Rigidbody2D>().velocity += Vector2.up * 2.0f;
             }
         }
     }

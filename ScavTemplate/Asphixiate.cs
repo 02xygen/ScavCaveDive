@@ -10,15 +10,50 @@ using UnityEngine;
 
 namespace CaveDiver
 {
-    [HarmonyPatch(typeof(Body), "Update")]
+
     public static class Asphixiate
     {
-        [HarmonyPostfix]
-        private static void Postfix(Body __instance)
+        static GameObject blush = new GameObject();
+
+        [HarmonyPatch(typeof(Body), "Start")]
+        public static class BlushMaker
         {
-            if(__instance.bloodOxygen <= 75f)
+            [HarmonyPostfix]
+            private static void Postfix(Body __instance)
             {
-               
+
+                    GameObject.Instantiate(blush);
+                    Sprite cyanosis = AssetLoader.LoadEmbeddedSprite("cyanosis.png");
+                    blush.AddComponent<SpriteRenderer>().sprite = cyanosis;
+                    blush.GetComponent<SpriteRenderer>().sortingOrder = 52;
+                    blush.transform.SetParent(__instance.limbs[0].gameObject.transform, false);
+                    Color color = blush.GetComponent<SpriteRenderer>().color;
+                    color.a = 0.0f;
+                    blush.GetComponent<SpriteRenderer>().color = color;
+
+            }
+        }
+
+
+
+        [HarmonyPatch(typeof(Body), "Update")]
+        public static class BlushPatch
+        {
+            [HarmonyPostfix]
+            private static void Postfix(Body __instance)
+            {
+               if(__instance.bloodOxygen < 90f)
+               {
+                    Color color = blush.GetComponent<SpriteRenderer>().color;
+                    color.a = Mathf.Lerp(0.0f, 1.0f, Mathf.InverseLerp(90f, 60f, __instance.bloodOxygen));
+                    blush.GetComponent<SpriteRenderer>().color = color;  
+               }
+               else
+               {
+                    Color color = blush.GetComponent<SpriteRenderer>().color;
+                    color.a = 0.0f;
+                    blush.GetComponent<SpriteRenderer>().color = color;
+               }
             }
         }
 

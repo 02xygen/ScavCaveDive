@@ -23,9 +23,9 @@ namespace CaveDiver
 
             else if(!__instance.inWater && wasSumberged)
             {
-                if(__instance.bloodOxygen <= 85 && __instance.GetStatus<AspirationStatus>().amount == 0) // Aspiration check not working?
+                if(__instance.bloodOxygen <= 90 && __instance.GetStatus<AspirationStatus>().amount == 0) // Aspiration check not working?
                 {
-                    Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.gasp1"), __instance.transform.position, true, false, null, 0.5f, 1f, false, false);
+                    Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.gasp" + Random.Range(2, 4).ToString()), __instance.transform.position, true, false, null, 0.5f, 1f, false, false);
                 }
                 wasSumberged = false;
             }

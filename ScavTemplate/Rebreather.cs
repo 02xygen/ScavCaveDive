@@ -26,7 +26,6 @@ namespace CaveDiver
             Body body = wornLimb.body;
             if (body == null) return;
 
-            body.hasScubaGear = true;
             body.DropItem(2);
 
 

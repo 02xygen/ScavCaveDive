@@ -24,8 +24,20 @@ namespace CaveDiver
             AudioClip regExhale = AssetLoader.LoadEmbeddedAudio("Sounds.regExhale.mp3");
             AssetLoader.CacheAudioClip("caveDiver.regulator.exhale", regExhale);
 
-            AudioClip gasp = AssetLoader.LoadEmbeddedAudio("Sounds.gasp1.mp3");
-            AssetLoader.CacheAudioClip("caveDiver.player.gasp1", gasp);
+            AudioClip rebExhale = AssetLoader.LoadEmbeddedAudio("Sounds.rebExhale.mp3");
+            AssetLoader.CacheAudioClip("caveDiver.rebreather.exhale", rebExhale);
+
+            AudioClip gasp1 = AssetLoader.LoadEmbeddedAudio("Sounds.gasp1.mp3");
+            AssetLoader.CacheAudioClip("caveDiver.player.gasp1", gasp1);
+
+            AudioClip gasp2 = AssetLoader.LoadEmbeddedAudio("Sounds.gasp2.mp3");
+            AssetLoader.CacheAudioClip("caveDiver.player.gasp2", gasp2);
+
+            AudioClip gasp3 = AssetLoader.LoadEmbeddedAudio("Sounds.gasp3.mp3");
+            AssetLoader.CacheAudioClip("caveDiver.player.gasp3", gasp3);
+
+            AudioClip gasp4 = AssetLoader.LoadEmbeddedAudio("Sounds.gasp4.mp3");
+            AssetLoader.CacheAudioClip("caveDiver.player.gasp4", gasp4);
 
             AudioClip drown = AssetLoader.LoadEmbeddedAudio("Sounds.drown1.mp3");
             AssetLoader.CacheAudioClip("caveDiver.player.drown1", drown);
