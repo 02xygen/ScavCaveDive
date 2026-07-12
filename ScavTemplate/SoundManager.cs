@@ -50,6 +50,10 @@ namespace CaveDiver
 
             AudioClip cough1 = AssetLoader.LoadEmbeddedAudio("Sounds.cough1.mp3");
             AssetLoader.CacheAudioClip("caveDiver.player.cough1", cough1);
-        }  
+
+            AudioClip fillTank = AssetLoader.LoadEmbeddedAudio("Sounds.fillTank.mp3");
+            AssetLoader.CacheAudioClip("caveDiver.airtank.filltank", fillTank);
+        }
+      
     }
 }

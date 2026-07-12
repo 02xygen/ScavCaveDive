@@ -31,10 +31,12 @@ namespace CaveDiver
 			Sprite wetsuitThighSprite = AssetLoader.LoadEmbeddedSprite("wetsuitThigh.png");
 			Sprite wetsuitThighBackSprite = AssetLoader.LoadEmbeddedSprite("wetsuitThighBack.png");
 			Sprite wetsuitCrusSprite = AssetLoader.LoadEmbeddedSprite("wetsuitCrus.png");
+			Sprite wetsuitFootSprite = AssetLoader.LoadEmbeddedSprite("wetsuitFoot.png");
 			Sprite diveMaskWornSprite = AssetLoader.LoadEmbeddedSprite("diveMaskHead.png");
-			Sprite respiratorSprite = AssetLoader.LoadEmbeddedSprite("respiratorHead.png");
+			Sprite regulatorSprite = AssetLoader.LoadEmbeddedSprite("regulatorHead.png");
 			Sprite swimGogglesWornSprite = AssetLoader.LoadEmbeddedSprite("swimGogglesHead.png");
 			Sprite makeshiftFinsWornSprite = AssetLoader.LoadEmbeddedSprite("makeshiftFinFoot.png");
+			Sprite finsWornSprite = AssetLoader.LoadEmbeddedSprite("finsFoot.png");
 			Sprite airTankSprite = AssetLoader.LoadEmbeddedSprite("airTank.png");
 			Sprite airTankTorsoSprite = AssetLoader.LoadEmbeddedSprite("scubatorso.png");
 			Sprite airTankHeadSprite = AssetLoader.LoadEmbeddedSprite("regulatorHead.png");
@@ -42,8 +44,10 @@ namespace CaveDiver
 			Sprite lifeVestWornSprite = AssetLoader.LoadEmbeddedSprite("lifeVestWorn.png");
 			Sprite rebreatherTorsoSprite = AssetLoader.LoadEmbeddedSprite("rebreatherTorso.png");
 			Sprite rebreatherHeadSprite = AssetLoader.LoadEmbeddedSprite("rebreatherHead.png");
+			Sprite weightBeltSprite = AssetLoader.LoadEmbeddedSprite("weightBelt.png");
 
-			Sprite airBladderFullSprite = AssetLoader.LoadEmbeddedSprite("airBladder.png");
+            
+			Sprite closedCellFoamSprite = AssetLoader.LoadEmbeddedSprite("closedCellFoam.png");
 			Sprite wetsuitSprite = AssetLoader.LoadEmbeddedSprite("wetsuitIcon.png");
 			Sprite swimGogglesSprite = AssetLoader.LoadEmbeddedSprite("swimGogglesIcon.png");
 			Sprite divingMaskSprite = AssetLoader.LoadEmbeddedSprite("divingMaskIcon.png");
@@ -64,6 +68,7 @@ namespace CaveDiver
               ItemInfo.DecayType.NoDecayWhenStill
           ),
                 wearable = true,
+                wearableCanBeHeld = true,
                 weight = 0.2f,
                 desiredWearLimb = "UpTorso",
                 wearSlotId = "harness",
@@ -71,6 +76,7 @@ namespace CaveDiver
                 wearableVisualOffset = 5,
                 value = 8,
                 WornSprite = lifeVestWornSprite,
+                SpawnFrequency = 1
             }.AddSpawnComponent<LifeVest>(), lifeVestSprite);
 
             ItemRegistry.Register("wetsuit", new CustomItemInfo
@@ -89,7 +95,8 @@ namespace CaveDiver
 				ItemInfo.DecayType.NoDecayWhenStill
 			),
 				wearable = true,
-				weight = 0.5f,
+                wearableCanBeHeld = true,
+                weight = 0.5f,
 				desiredWearLimb = "UpTorso",
 				wearSlotId = "outertorso",
 				wearableIsolation = 0.1f,
@@ -102,7 +109,22 @@ namespace CaveDiver
 			},
 				value = 16,
 				WornSprite = wetsuitTorsoSprite,
-                WornSpriteOffset = new Vector2(0f, -0.04f),
+                MultiWornSprites = new Dictionary<string, Sprite>
+                {
+                    ["UpArmF"] = wetsuitUpArmSprite,
+                    ["UpArmB"] = wetsuitUpArmSprite,
+                    ["DownArmF"] = wetsuitDownArmSprite,
+                    ["DownArmB"] = wetsuitDownArmSprite,
+                    ["DownTorso"] = wetsuitDownTorsoSprite,
+                    ["ThighF"] = wetsuitThighSprite,
+                    ["ThighB"] = wetsuitThighBackSprite,
+                    ["CrusF"] = wetsuitCrusSprite,
+                    ["CrusB"] = wetsuitCrusSprite,
+                    ["FootF"] = wetsuitFootSprite,
+                    ["FootB"] = wetsuitFootSprite
+                },
+                SpawnFrequency = 1,
+                WornSpriteOffset = new Vector2(0f, -0.04f)
             }.AddSpawnComponent<Wetsuit>(), wetsuitSprite);
 
             ItemRegistry.Register("divingmask", new CustomItemInfo
@@ -120,6 +142,7 @@ namespace CaveDiver
                 ItemInfo.DecayType.NoDecayWhenStill
             ),
                 wearable = true,
+                wearableCanBeHeld = true,
                 weight = 0.2f,
                 desiredWearLimb = "Head",
                 wearSlotId = "eyes",
@@ -132,6 +155,7 @@ namespace CaveDiver
                     ["waterlogAmount"] = 0f
                 },
                 WornSprite = diveMaskWornSprite,
+                SpawnFrequency = 1
             }.AddSpawnComponent<DivingMask>(), divingMaskSprite);
 
             ItemRegistry.Register("swimgoggles", new CustomItemInfo
@@ -149,6 +173,7 @@ namespace CaveDiver
                 ItemInfo.DecayType.NoDecayWhenStill
             ),
                 wearable = true,
+                wearableCanBeHeld = true,
                 weight = 0.1f,
                 desiredWearLimb = "Head",
                 wearSlotId = "eyes",
@@ -161,6 +186,7 @@ namespace CaveDiver
                     ["waterlogAmount"] = 0f
                 },
                 WornSprite = swimGogglesWornSprite,
+                SpawnFrequency = 1
             }.AddSpawnComponent<SwimGoggles>(), swimGogglesSprite);
 
             ItemRegistry.Register("makeshiftfins", new CustomItemInfo
@@ -178,7 +204,8 @@ namespace CaveDiver
                ItemInfo.DecayType.NoDecayWhenStill
            ),
                 wearable = true,
-                weight = 0.9f,
+                wearableCanBeHeld = true,
+                weight = 0.4f,
                 desiredWearLimb = "FootF",
                 wearSlotId = "feet",
                 wearableHitDurabilityLossMultiplier = 0.25f,
@@ -186,7 +213,43 @@ namespace CaveDiver
                 wearableVisualOffset = 5,
                 value = 8,
                 WornSprite = makeshiftFinsWornSprite,
+                MultiWornSprites = new Dictionary<string, Sprite>
+                {
+                    ["FootB"] = makeshiftFinsWornSprite
+                },
+                SpawnFrequency = 1
             },  makeshiftFinsWornSprite);
+
+            ItemRegistry.Register("fins", new CustomItemInfo
+            {
+                fullName = "Fins",
+                description = "A pair of swim fins. Greatly improves movement in liquids.",
+                category = "utility",
+                slotRotation = 0f,
+                usable = false,
+                usableOnLimb = false,
+                decayMinutes = 180f,
+                destroyAtZeroCondition = true,
+                decayInfo = (byte)(
+               ItemInfo.DecayType.NoDecayWhenNotWorn |
+               ItemInfo.DecayType.NoDecayWhenStill
+           ),
+                wearable = true,
+                wearableCanBeHeld = true,
+                weight = 0.4f,
+                desiredWearLimb = "FootF",
+                wearSlotId = "feet",
+                wearableHitDurabilityLossMultiplier = 0.25f,
+                wearableArmor = 0.15f,
+                wearableVisualOffset = 5,
+                value = 12,
+                WornSprite = finsWornSprite,
+                MultiWornSprites = new Dictionary<string, Sprite>
+                {
+                    ["FootB"] = finsWornSprite
+                },
+                SpawnFrequency = 1
+            }, finsWornSprite);
 
             ItemRegistry.Register("airtank", new CustomItemInfo
             {
@@ -196,12 +259,13 @@ namespace CaveDiver
                 slotRotation = 0f,
                 usable = false,
                 usableOnLimb = false,
-                decayMinutes = 180f,
-                destroyAtZeroCondition = true,
+                decayMinutes = 120f,
+                destroyAtZeroCondition = false,
                 decayInfo = (byte)(
                ItemInfo.DecayType.NoDecayWhenNotWorn
            ),
                 wearable = true,
+                wearableCanBeHeld = true,
                 weight = 0.9f,
                 desiredWearLimb = "UpTorso",
                 wearSlotId = "back",
@@ -214,6 +278,11 @@ namespace CaveDiver
                     ["RegInMouth"] = true
                 },
                 WornSprite = airTankTorsoSprite,
+                MultiWornSprites = new Dictionary<string, Sprite>
+                {
+                    ["Head"] = regulatorSprite
+                },
+                SpawnFrequency = 1
             }.AddSpawnComponent<AirTank>(), airTankSprite);
 
             ItemRegistry.Register("rebreather", new CustomItemInfo
@@ -229,12 +298,12 @@ namespace CaveDiver
                 {
                     Preset = BatteryItem.BatteryPreset.Large
                 },
-                destroyAtZeroCondition = true,
                 decayInfo = (byte)(
                ItemInfo.DecayType.NoDecayWhenNotWorn |
                ItemInfo.DecayType.BatteryDecay
            ),
                 wearable = true,
+                wearableCanBeHeld = true,
                 weight = 0.9f,
                 desiredWearLimb = "UpTorso",
                 wearSlotId = "back",
@@ -249,35 +318,56 @@ namespace CaveDiver
 
                 useAction = (body, item) =>
                 {
-
+                    
                 },
 
-               WornSprite = rebreatherTorsoSprite,
+                WornSprite = rebreatherTorsoSprite,
+                MultiWornSprites = new Dictionary<string, Sprite>
+                {
+                    ["Head"] = rebreatherHeadSprite
+                },
+                SpawnFrequency = 1
             }.AddSpawnComponent<Rebreather>(), rebreatherTorsoSprite);
 
-            ItemRegistry.Register("airbladder", new CustomItemInfo // PROBLEM CAN BE USED TO RAPIDLY REGAN STAMINA / SPo2 out of the water since it can be used multiple times.
-                                                                   // OPTION 1 make it a one use thing and reduce the material cost?
-                                                                   // OPTION 2 make it cost stamina and Spo2 to inflate ensentailly "storing" it for later use
+            ItemRegistry.Register("closedcellfoam", new CustomItemInfo
             {
-                fullName = "Air Bladder",
-                description = "A simple gas bladder featuring a quick release valve. Holds a lungful of air that can be breathed in emergency situations, restoring stamina and slightly boosting Spo2. One time use.",
-                category = "utility",
+                fullName = "Closed-cell foam",
+                description = "A dense block of foam filled with sealed gas pockets. Very buoyant.",
+                category = "material",
                 slotRotation = 0f,
-                usable = true,
+                usable = false,
                 usableOnLimb = false,
                 decayMinutes = 80f,
                 destroyAtZeroCondition = true,
                 weight = 0.2f,
                 value = 10,
-                useAction = (body, item) =>
-                {
-                     body.bloodOxygen += 3f;
-                     body.stamina += 10f;
-                     Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.regulator.inhale"), body.transform.position, true, true, null, 0.75f, 0.85f);
-                     item.SetCondition(0f);
-                    
-                },
-            }, airBladderFullSprite);
+                SpawnFrequency = 0
+            }.AddSpawnComponent<ClosedCellFoam>(), closedCellFoamSprite);
+
+            ItemRegistry.Register("weightbelt", new CustomItemInfo
+            {
+                fullName = "Weight Belt",
+                description = "A belt fitted with heavy weights. Decreases bouyancy when worn, making you sink quickly in liquids. Is much more effective if you relax your body (ragdoll).",
+                category = "utility",
+                slotRotation = 0f,
+                usable = false,
+                usableOnLimb = false,
+                decayMinutes = 180f,
+                destroyAtZeroCondition = true,
+                decayInfo = (byte)(
+               ItemInfo.DecayType.NoDecayWhenNotWorn
+           ),
+                wearable = true,
+                wearableCanBeHeld = true,
+                weight = 1.5f,
+                desiredWearLimb = "DownTorso",
+                wearSlotId = "belt",
+                wearableHitDurabilityLossMultiplier = 0.25f,
+                wearableVisualOffset = 2,
+                value = 12,
+                WornSprite = weightBeltSprite,
+                SpawnFrequency = 1
+            }.AddSpawnComponent<WeightBelt>(), weightBeltSprite);
 
         }
     }

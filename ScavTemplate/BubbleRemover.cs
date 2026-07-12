@@ -26,9 +26,8 @@ namespace CaveDiver
             {
                 var cell = WorldGeneration.world.WorldToBlockPos(particles[i].position);
                 byte liquid = FluidManager.main.GetLiquid(cell.x, cell.y);
+                Color color = FluidManager.main.LiquidColor(cell);
 
-                List<Color> colors = new List<Color> { Color.white, Color.white, Color.green, Color.black, new Color(0.59f, 0.3f, 0.0f), Color.grey, Color.red };
-                
                 if (liquid == 0)
                 {
                     particles[i].remainingLifetime = -1f;
@@ -36,7 +35,7 @@ namespace CaveDiver
 
                 else
                 {
-                    particles[i].startColor = colors[liquid];
+                    particles[i].startColor = color;
                 }
 
 

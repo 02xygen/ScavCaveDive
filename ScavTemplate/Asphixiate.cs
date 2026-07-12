@@ -37,7 +37,7 @@ namespace CaveDiver
 
 
         [HarmonyPatch(typeof(Body), "Update")]
-        public static class BlushPatch
+        public static class BlushPatch // Causes Error when loading into a map a second time in the same session.
         {
             [HarmonyPostfix]
             private static void Postfix(Body __instance)

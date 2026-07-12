@@ -49,16 +49,27 @@ namespace CaveDiver
             }
         }
 
+        [HarmonyPatch(typeof(Body), "FixedUpdate")]
+        public static class FinPatch
+        {
+            [HarmonyPrefix]
+            private static void Prefix(Body __instance)
+            {
+
+            }
+        }
+
 
         [HarmonyPatch(typeof(Talker), "Update")]
-        public static class TalkerPatch // Causes null reference error
+        public static class TalkerPatch
         {
             [HarmonyPrefix]
             private static void Prefix(Talker __instance)
             {
-               if (__instance.body.GetWearable("airtank") != null) __instance.body.hasScubaGear = true;
-                if (__instance.body.GetWearable("rebreather") != null) __instance.body.hasScubaGear = true;
-                if (__instance.body.GetWearable("scubadivinggear") != null) __instance.body.hasScubaGear = true;
+               if (__instance?.trader) return;
+               if (__instance?.body?.GetWearable("airtank") != null) __instance.body.hasScubaGear = true;
+               if (__instance?.body?.GetWearable("rebreather") != null) __instance.body.hasScubaGear = true;
+               if (__instance?.body?.GetWearable("scubadivinggear") != null) __instance.body.hasScubaGear = true;
             }
         }
 
@@ -83,8 +94,11 @@ namespace CaveDiver
             private static bool Prefix(WorldGeneration __instance) // Maybe make a "super flooded modifier, though lumalgae spawns will have to be removed as they can cause impossible scenarios."
             {
                 var flooded = LayerModifier.availableModifiers[5];
+                var flooded2 = LayerModifier.availableModifiers[5];
                 flooded.Initialize(__instance);
+                flooded2.Initialize(__instance);
                 flooded.active = true;
+                flooded2.active = true;
                 __instance.layerPrefix = Locale.GetOther("layermodifier5");
                 __instance.layerDescription = Locale.GetOther("layermodifier5dsc");
                 return false;
@@ -111,12 +125,20 @@ namespace CaveDiver
             [HarmonyPostfix]
             private static void Postfix(WoundView __instance)
             {
-                // Probably very expensive Need alternate way to get component
-                GameObject.Find("Main Camera/Canvas/WoundView/StatMenu/AspirationFill").GetComponent<FilledImagePP>().fillAmount 
-                    = __instance.body.GetStatus<AspirationStatus>().amount / 100f;
+                AspirationStatus status = __instance.body.GetStatus<AspirationStatus>();
+                GameObject.Find("Main Camera/Canvas/WoundView/StatMenu/AspirationFill").GetComponent<FilledImagePP>().fillAmount = status.amount / 100f;
+                GameObject.Find("Main Camera/Canvas/WoundView/StatMenu/AspirationFill").GetComponent<FilledImagePP>().GetComponent<Image>().color = status.liquidColor;
+            }
+        }
+
+        [HarmonyPatch(typeof(LifepodPump), "Awake")]
+        public static class LifepodPumpPatch
+        {
+            [HarmonyPostfix]
+            private static void Postfix(LifepodPump __instance)
+            {
+                __instance.gameObject.AddComponent<RefillAirTank>();
             }
         }
     }
-
-   
 }
