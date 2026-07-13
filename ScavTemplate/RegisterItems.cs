@@ -42,6 +42,7 @@ namespace CaveDiver
 			Sprite airTankHeadSprite = AssetLoader.LoadEmbeddedSprite("regulatorHead.png");
 			Sprite lifeVestSprite = AssetLoader.LoadEmbeddedSprite("lifeVest.png");
 			Sprite lifeVestWornSprite = AssetLoader.LoadEmbeddedSprite("lifeVestWorn.png");
+			Sprite BCDWornSprite = AssetLoader.LoadEmbeddedSprite("BCDWorn.png");
 			Sprite rebreatherTorsoSprite = AssetLoader.LoadEmbeddedSprite("rebreatherTorso.png");
 			Sprite rebreatherHeadSprite = AssetLoader.LoadEmbeddedSprite("rebreatherHead.png");
 			Sprite weightBeltSprite = AssetLoader.LoadEmbeddedSprite("weightBelt.png");
@@ -78,6 +79,32 @@ namespace CaveDiver
                 WornSprite = lifeVestWornSprite,
                 SpawnFrequency = 1
             }.AddSpawnComponent<LifeVest>(), lifeVestSprite);
+
+            ItemRegistry.Register("bcd", new CustomItemInfo
+            {
+                fullName = "Buoyancy Control Device",
+                description = "A wearable device that automatically maintains neutral bouyancy.",
+                category = "utility",
+                slotRotation = 0f,
+                usable = false,
+                usableOnLimb = false,
+                decayMinutes = 180f,
+                destroyAtZeroCondition = true,
+                decayInfo = (byte)(
+             ItemInfo.DecayType.NoDecayWhenNotWorn |
+             ItemInfo.DecayType.NoDecayWhenStill
+         ),
+                wearable = true,
+                wearableCanBeHeld = true,
+                weight = 0.5f,
+                desiredWearLimb = "UpTorso",
+                wearSlotId = "harness",
+                wearableHitDurabilityLossMultiplier = 0.25f,
+                wearableVisualOffset = 5,
+                value = 30,
+                WornSprite = BCDWornSprite,
+                SpawnFrequency = 1
+            }, BCDWornSprite);
 
             ItemRegistry.Register("wetsuit", new CustomItemInfo
 			{

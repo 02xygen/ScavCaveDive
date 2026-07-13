@@ -21,6 +21,7 @@ namespace CaveDiver
         public static bool hasRebreather;
         public static bool hasMakshiftFins;
         public static bool hasFins;
+        public static float baseMaxSpeed;
 
         [HarmonyPatch(typeof(Limb), "ImpactDamage")]
         public static class ImpactPatch
@@ -36,6 +37,19 @@ namespace CaveDiver
             }
         }
 
+        [HarmonyPatch(typeof(Body), "Awake")]
+        public static class SaveBaseSpeed
+        {
+            [HarmonyPrefix]
+            private static void Prefix(Body __instance)
+            {
+                baseMaxSpeed = __instance.maxSpeed;
+                Debug.Log(baseMaxSpeed);
+            }
+        }
+
+
+
         [HarmonyPatch(typeof(Body), "HandleCirculation")] // For any scuba reliant functions we need a prefix that checks current
                                                           // equipped items and sets hasScubaGear to either true or false;
         public static class RespirationPatch
@@ -49,16 +63,52 @@ namespace CaveDiver
             }
         }
 
-        [HarmonyPatch(typeof(Body), "FixedUpdate")]
-        public static class FinPatch
+        [HarmonyPatch(typeof(PlayerCamera), "HandleWorldUI")]
+        public static class DrinkUIPatch
         {
             [HarmonyPrefix]
-            private static void Prefix(Body __instance)
+            private static void Prefix(PlayerCamera __instance)
             {
-
+                if (__instance.body.GetWearable("bcd") != null)
+                {
+                    __instance.body.liquidDrinkTime = 0f;
+                }
             }
         }
 
+        [HarmonyPatch(typeof(Body), "FixedUpdate")]
+        public static class WaterMovementPatch
+        {
+            [HarmonyPostfix]
+            private static void Postfix(Body __instance)
+            {
+                var cell = WorldGeneration.world.WorldToBlockPos(new Vector2(PlayerCamera.main.body.limbs[2].transform.position.x, PlayerCamera.main.body.limbs[2].transform.position.y));
+                byte liquid = FluidManager.main.GetLiquid(cell.x, cell.y);
+
+                if (liquid != 0)
+                {
+                    if (__instance.GetWearable("makeshiftfins") != null) __instance.rb.AddForce(new Vector2(__instance.moveDir.x, 0f) * 1000f);
+                    if (__instance.GetWearable("fins") != null) __instance.rb.AddForce(new Vector2(__instance.moveDir.x,0f) * 2000f);
+
+                    if (__instance.GetWearable("bcd") != null)
+                    {
+                        __instance.rb.gravityScale = 0.54f; // Doesn't compensate for water bouyancy completely, but is very close. 
+                                                            // NEEDS TO SCALE WITH THE BOUYANCY OF THE LIQUID.
+
+                        if (__instance.rb.velocity.y < __instance.actualMaxSpeed && __instance.moveDir.y > 0f)
+                        {
+                            __instance.rb.AddForce(Vector2.up * __instance.actualMoveForce);
+                        }
+                        if (__instance.rb.velocity.y > -__instance.actualMaxSpeed && __instance.moveDir.y < 0f)
+                        {
+                            __instance.rb.AddForce(Vector2.down * __instance.actualMoveForce);
+                            __instance.liquidDrinkTime = 0f;
+                        }
+                    } 
+                    else __instance.rb.gravityScale = 1f;
+                }
+            }
+        }
 
         [HarmonyPatch(typeof(Talker), "Update")]
         public static class TalkerPatch

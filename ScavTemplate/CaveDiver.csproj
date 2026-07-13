@@ -33,6 +33,7 @@
     <None Remove="Sprites\airTank.png" />
     <None Remove="Sprites\aspiration.png" />
     <None Remove="Sprites\aspirationFill.png" />
+    <None Remove="Sprites\BCDWorn.png" />
     <None Remove="Sprites\bubbleSmall.png" />
     <None Remove="Sprites\closedCellFoam.png" />
     <None Remove="Sprites\cyanosis.png" />
@@ -79,6 +80,7 @@
     <EmbeddedResource Include="Sprites\airTank.png" />
     <EmbeddedResource Include="Sprites\aspiration.png" />
     <EmbeddedResource Include="Sprites\aspirationFill.png" />
+    <EmbeddedResource Include="Sprites\BCDWorn.png" />
     <EmbeddedResource Include="Sprites\bubbleSmall.png" />
     <EmbeddedResource Include="Sprites\closedCellFoam.png" />
     <EmbeddedResource Include="Sprites\cyanosis.png" />

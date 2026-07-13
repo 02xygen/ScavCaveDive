@@ -57,5 +57,11 @@ namespace CaveDiver
             }
         }
 
+        private static void OnDestroy()
+        {
+            Harmony.UnpatchAll();
+            Debug.Log("DESTROY!!!!");
+        }
+
     }
 }
