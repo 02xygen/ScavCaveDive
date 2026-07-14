@@ -16,8 +16,21 @@ namespace CaveDiver
         [HarmonyPostfix]
         private static void Postfix(Body __instance)
         {
-            if (__instance.GetWearable("airtank") != null) __instance.hasScubaGear = true;
-            if (__instance.GetWearable("rebreather") != null) __instance.hasScubaGear = true;
+            if (__instance.GetWearable("airtank") != null && __instance.GetWearable("airtank").condition > 0f)
+            {
+                ItemRegistry.TryGetCustomData<bool>(__instance.GetWearable("airtank"), "RegInMouth", out bool regIn);
+                if (regIn) __instance.hasScubaGear = true;
+            }
+
+            else if (__instance.GetWearable("rebreather") != null && __instance.GetWearable("rebreather").condition > 0f)
+            {
+                ItemRegistry.TryGetCustomData<bool>(__instance.GetWearable("rebreather"), "RegInMouth", out bool regIn);
+                if (regIn) __instance.hasScubaGear = true;
+            }
+
+            else __instance.hasScubaGear = false;
+
+            if (__instance.GetWearable("scubadivinggear") != null) __instance.hasScubaGear = true;
 
             if (__instance.inWater && __instance.hasScubaGear && __instance.breathing)
             {

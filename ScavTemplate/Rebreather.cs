@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CUCoreLib.Registries;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,10 +27,8 @@ namespace CaveDiver
             Body body = wornLimb.body;
             if (body == null) return;
 
-            body.DropItem(2);
-
-
-            // Make is so high impact damage knocks the regulator out of your mouth
+            ItemRegistry.TryGetCustomData<bool>(item, "RegInMouth", out bool regIn);
+            if (regIn) body.DropItem(2);
         }
     }
 }

@@ -46,6 +46,29 @@ namespace CaveDiver
 
             RecipeRegistry.Register(new Recipe
             {
+                INT = 10,
+                category = Recipes.RecipeCategory.Utilities,
+                result = new RecipeResult
+                {
+                    id = "makeshiftfins",
+                    amount = 1,
+                    isLiquid = false,
+                    resultCondition = 1f
+                },
+                items = new List<RecipeItem>
+            {
+                new RecipeItem(0f) { specific = true, specificId = "rope" },
+                new RecipeItem(0f) { specific = true, specificId = "rope" },
+                new RecipeItem(0f) { specific = true, specificId = "string" },
+                new RecipeItem(0f) { specific = true, specificId = "string" },
+                new RecipeItem(0f) { specific = true, specificId = "plasticchunk" },
+                new RecipeItem(0f) { specific = true, specificId = "plasticchunk" },
+                new RecipeItem(30f) { specific = true, specificId = "biochem", isLiquid = true }
+            }
+            });
+
+            RecipeRegistry.Register(new Recipe
+            {
                 INT = 12,
                 category = Recipes.RecipeCategory.Utilities,
                 result = new RecipeResult
@@ -90,6 +113,30 @@ namespace CaveDiver
                 new RecipeItem(0f) { specific = true, specificId = "canvas" },
                 new RecipeItem(40f) { specific = true, specificId = "biochem", isLiquid = true },
                 new RecipeItem(0f){ quality = "cutting", destroyItem = false }
+            }
+            });
+
+            RecipeRegistry.Register(new Recipe
+            {
+                INT = 12,
+                category = Recipes.RecipeCategory.Utilities,
+                result = new RecipeResult
+                {
+                    id = "fins",
+                    amount = 1,
+                    isLiquid = false,
+                    resultCondition = 1f
+                },
+                items = new List<RecipeItem>
+            {
+                new RecipeItem(0f) { specific = true, specificId = "rope" },
+                new RecipeItem(0f) { specific = true, specificId = "rope" },
+                new RecipeItem(0f) { specific = true, specificId = "flexiglass" },
+                new RecipeItem(0f) { specific = true, specificId = "flexiglass" },
+                new RecipeItem(0f) { specific = true, specificId = "plasticchunk" },
+                new RecipeItem(0f) { specific = true, specificId = "plasticchunk" },
+                new RecipeItem(30f) { specific = true, specificId = "biochem", isLiquid = true },
+                new RecipeItem(0f){ quality = "nails", destroyItem = true }
             }
             });
 
@@ -204,6 +251,35 @@ namespace CaveDiver
                 new RecipeItem(0f) { specific = true, specificId = "bundleofwires" },
                 new RecipeItem(0f) { specific = true, specificId = "bundleofwires" },
                 new RecipeItem(0f) { specific = true, specificId = "circuitboard" },
+                new RecipeItem(10f) { specific = true, specificId = "biochem", isLiquid = true },
+                new RecipeItem(0f){ quality = "hammering", destroyItem = false },
+                new RecipeItem(0f){ quality = "cutting", destroyItem = false }
+            }
+            });
+
+            RecipeRegistry.Register(new Recipe
+            {
+                INT = 15,
+                category = Recipes.RecipeCategory.Utilities,
+                result = new RecipeResult
+                {
+                    id = "bcd",
+                    amount = 1,
+                    isLiquid = false,
+                    resultCondition = 1f
+                },
+                items = new List<RecipeItem>
+            {
+                new RecipeItem(0f) { specific = true, specificId = "canvas" },
+                new RecipeItem(0f) { specific = true, specificId = "canvas" },
+                new RecipeItem(0f) { specific = true, specificId = "plasticchunk" },
+                new RecipeItem(0f) { specific = true, specificId = "plasticchunk" },
+                new RecipeItem(0f) { specific = true, specificId = "flexiglass" },
+                new RecipeItem(0f) { specific = true, specificId = "flexiglass" },
+                new RecipeItem(0f) { specific = true, specificId = "autoinjector" },
+                new RecipeItem(0f) { specific = true, specificId = "bundleofwires" },
+                new RecipeItem(0f) { specific = true, specificId = "circuitboard" },
+                new RecipeItem(0f) { specific = true, specificId = "belt" },
                 new RecipeItem(10f) { specific = true, specificId = "biochem", isLiquid = true },
                 new RecipeItem(0f){ quality = "hammering", destroyItem = false },
                 new RecipeItem(0f){ quality = "cutting", destroyItem = false }

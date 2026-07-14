@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CUCoreLib.Registries;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,7 +27,13 @@ namespace CaveDiver
             Body body = wornLimb.body;
             if (body == null) return;
 
-            // Add waterlog logic
+            if (item.condition < 0.5 && body.inWater)
+            {
+                ItemRegistry.TryGetCustomData<float>(item, "waterlogAmount", out float amount);
+                amount += (1f - item.condition) * Time.deltaTime / 120f;
+                amount = Mathf.Clamp(amount, 0.05f, 1.0f);
+                ItemRegistry.SetCustomData(item, "waterlogAmount", amount);
+            }
 
         }
     }

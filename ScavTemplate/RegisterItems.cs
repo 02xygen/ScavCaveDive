@@ -170,6 +170,23 @@ namespace CaveDiver
             ),
                 wearable = true,
                 wearableCanBeHeld = true,
+                useAction = delegate (Body body, Item item)
+                {
+                    if (!CUCoreUtils.hasEquipped("divingmask")) // Has issues, runs after the item is already equipped, so will always run.
+                    {
+                        if (body.inWater) ItemRegistry.SetCustomData(item, "waterlogAmount", 1f);
+                        else ItemRegistry.SetCustomData(item, "waterlogAmount", 0f);
+                    }
+
+                    ItemRegistry.TryGetCustomData<float>(item, "waterlogAmount", out float amount);
+                    if (amount > 0 && body.inWater && body.GetWearable("divingmask") != null && !body.GetStatus<AspirationStatus>().aspirating)
+                    {
+                        ItemRegistry.SetCustomData(item, "waterlogAmount", 0f);
+                        Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.regulator.exhale"), body.transform.position, true, true, null, 0.75f, 0.85f);
+                        Bubbles.BubbleBurst(body.limbs[0].transform);
+                        body.stamina -= 5f;
+                    }
+                },
                 weight = 0.2f,
                 desiredWearLimb = "Head",
                 wearSlotId = "eyes",
@@ -191,7 +208,7 @@ namespace CaveDiver
                 description = "Air-tight goggles that cover your eyes. Cannot be cleared since it doesn't cover your nose.",
                 category = "utility",
                 slotRotation = 0f,
-                usable = false,
+                usable = true,
                 usableOnLimb = false,
                 decayMinutes = 80f,
                 destroyAtZeroCondition = true,
@@ -199,6 +216,14 @@ namespace CaveDiver
                 ItemInfo.DecayType.NoDecayWhenNotWorn |
                 ItemInfo.DecayType.NoDecayWhenStill
             ),
+                useAction = delegate (Body body, Item item)
+                {
+                    if (!CUCoreUtils.hasEquipped("swimgoggles")) // Has issues, runs after the item is already equipped
+                    {
+                        if (body.inWater) ItemRegistry.SetCustomData(item, "waterlogAmount", 1f);
+                        else ItemRegistry.SetCustomData(item, "waterlogAmount", 0f);
+                    }
+                },
                 wearable = true,
                 wearableCanBeHeld = true,
                 weight = 0.1f,
@@ -284,7 +309,7 @@ namespace CaveDiver
                 description = "A canister full of pressurized air, with a regulator attached. When worn, indefintely allows breathing and stamina regeneration when submerged. Don't forget to put the regulator in your mouth! (Use Item)",
                 category = "utility",
                 slotRotation = 0f,
-                usable = false,
+                usable = true,
                 usableOnLimb = false,
                 decayMinutes = 120f,
                 destroyAtZeroCondition = false,
@@ -302,7 +327,23 @@ namespace CaveDiver
                 value = 8,
                 CustomData =
                 {
-                    ["RegInMouth"] = true
+                    ["RegInMouth"] = false
+                },
+
+                useAction = delegate (Body body, Item item)
+                {
+                    ItemRegistry.TryGetCustomData<bool>(item, "RegInMouth", out bool regIn); //Add sprite logic for this
+                    if (regIn)
+                    {
+                        ItemRegistry.SetCustomData(item, "RegInMouth", false);
+                        Debug.Log("Removed Regulator");
+                    }
+                    else if (!regIn && !body.disfigured)
+                    {
+                        ItemRegistry.SetCustomData(item, "RegInMouth", true);
+                        Debug.Log("Inserted Regulator");
+                    }
+
                 },
                 WornSprite = airTankTorsoSprite,
                 MultiWornSprites = new Dictionary<string, Sprite>
@@ -318,7 +359,7 @@ namespace CaveDiver
                 description = "A device which re-oxyginates the air you exhale, allowing it to be breathed again. When worn, indefintely allows breathing and stamina regeneration when submerged. Don't forget to put the regulator in your mouth! (Use Item)",
                 category = "utility",
                 slotRotation = 0f,
-                usable = false,
+                usable = true,
                 usableOnLimb = false,
                 decayMinutes = 180f,
                 Battery = new BatteryProperties
@@ -340,12 +381,23 @@ namespace CaveDiver
                 value = 8,
                 CustomData =
                 {
-                    ["RegInMouth"] = true
+                    ["RegInMouth"] = false
                 },
 
-                useAction = (body, item) =>
+                useAction = delegate (Body body, Item item) //Add sprite logic for this
                 {
-                    
+                    ItemRegistry.TryGetCustomData<bool>(item, "RegInMouth", out bool regIn);
+                    if (regIn)
+                    {
+                        ItemRegistry.SetCustomData(item, "RegInMouth", false);
+                        Debug.Log("Removed Regulator");
+                    }
+                    else if (!regIn && !body.disfigured)
+                    {
+                        ItemRegistry.SetCustomData(item, "RegInMouth", true);
+                        Debug.Log("Inserted Regulator");
+                    }
+
                 },
 
                 WornSprite = rebreatherTorsoSprite,
