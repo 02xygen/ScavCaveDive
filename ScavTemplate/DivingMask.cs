@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace CaveDiver
 {
-    public sealed class DivingMask() : MonoBehaviour
+    public sealed class DivingMask : MonoBehaviour
     {
         private Item item;
 

@@ -36,12 +36,13 @@ namespace CaveDiver
                     if (__instance.body.GetWearable("airtank") != null)
                     {
                         ItemRegistry.SetCustomData(__instance.body.GetWearable("airtank"), "RegInMouth", false);
-                        Debug.Log("Regulator Knocked out!");
+                        CUCoreUtils.setMultiWornSprite(__instance.body.GetWearable("airtank"), "Head", AssetLoader.LoadEmbeddedSprite("dummy.png"));
                     }
 
                     if (__instance.body.GetWearable("rebreather") != null)
                     {
                         ItemRegistry.SetCustomData(__instance.body.GetWearable("rebreather"), "RegInMouth", false);
+                        CUCoreUtils.setMultiWornSprite(__instance.body.GetWearable("rebreather"), "Head", AssetLoader.LoadEmbeddedSprite("dummy.png"));
                     }
                     
                 } 

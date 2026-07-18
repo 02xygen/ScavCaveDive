@@ -22,7 +22,7 @@ namespace CaveDiver
             try { ContentReloadManager.EnableHotReload("com.O2xymoron.CaveDiver"); CreateItems(); } catch (Exception e) { Debug.Log(e); }
         }
 
-		void CreateItems() // TODO: MAKE DIVING BELT ITEM THAT DECREASES BOUYANCY.
+		void CreateItems()
         {
 			Sprite wetsuitTorsoSprite = AssetLoader.LoadEmbeddedSprite("wetsuitUpTorso.png");
 			Sprite wetsuitDownTorsoSprite = AssetLoader.LoadEmbeddedSprite("wetsuitDownTorso.png");
@@ -48,8 +48,12 @@ namespace CaveDiver
 			Sprite weightBeltSprite = AssetLoader.LoadEmbeddedSprite("weightBelt.png");
 
             
+			Sprite dummySprite = AssetLoader.LoadEmbeddedSprite("dummy.png");
 			Sprite closedCellFoamSprite = AssetLoader.LoadEmbeddedSprite("closedCellFoam.png");
 			Sprite wetsuitSprite = AssetLoader.LoadEmbeddedSprite("wetsuitIcon.png");
+			Sprite BCDSprite = AssetLoader.LoadEmbeddedSprite("BCDIcon.png");
+			Sprite finsSprite = AssetLoader.LoadEmbeddedSprite("finsIcon.png");
+			Sprite makeshiftFinsSprite = AssetLoader.LoadEmbeddedSprite("makeshiftFinsIcon.png");
 			Sprite swimGogglesSprite = AssetLoader.LoadEmbeddedSprite("swimGogglesIcon.png");
 			Sprite divingMaskSprite = AssetLoader.LoadEmbeddedSprite("divingMaskIcon.png");
 
@@ -60,7 +64,7 @@ namespace CaveDiver
                 description = "A wearable device that greatly increases bouyancy. Keeps you afloat in liquids. Is much more effective if you relax your body (ragdoll).",
                 category = "utility",
                 slotRotation = 0f,
-                usable = false,
+                usable = true,
                 usableOnLimb = false,
                 decayMinutes = 60f,
                 destroyAtZeroCondition = true,
@@ -77,6 +81,11 @@ namespace CaveDiver
                 wearableVisualOffset = 5,
                 value = 8,
                 WornSprite = lifeVestWornSprite,
+                useAction = delegate (Body body, Item item)
+                {
+                    item.GetComponent<SpriteRenderer>().sortingOrder = 28; // Doesn't work for some reason. Sprite needs to be reset or
+                                                                           // something for the sorting order change to take effect.
+                },
                 SpawnFrequency = 1
             }.AddSpawnComponent<LifeVest>(), lifeVestSprite);
 
@@ -86,7 +95,7 @@ namespace CaveDiver
                 description = "A wearable device that automatically maintains neutral bouyancy.",
                 category = "utility",
                 slotRotation = 0f,
-                usable = false,
+                usable = true,
                 usableOnLimb = false,
                 decayMinutes = 180f,
                 destroyAtZeroCondition = true,
@@ -103,8 +112,12 @@ namespace CaveDiver
                 wearableVisualOffset = 5,
                 value = 30,
                 WornSprite = BCDWornSprite,
+                useAction = delegate (Body body, Item item)
+                {
+                    item.GetComponent<SpriteRenderer>().sortingOrder = 28;
+                },
                 SpawnFrequency = 1
-            }, BCDWornSprite);
+            }, BCDSprite);
 
             ItemRegistry.Register("wetsuit", new CustomItemInfo
 			{
@@ -270,7 +283,7 @@ namespace CaveDiver
                     ["FootB"] = makeshiftFinsWornSprite
                 },
                 SpawnFrequency = 1
-            },  makeshiftFinsWornSprite);
+            },  makeshiftFinsSprite);
 
             ItemRegistry.Register("fins", new CustomItemInfo
             {
@@ -301,7 +314,7 @@ namespace CaveDiver
                     ["FootB"] = finsWornSprite
                 },
                 SpawnFrequency = 1
-            }, finsWornSprite);
+            }, finsSprite);
 
             ItemRegistry.Register("airtank", new CustomItemInfo
             {
@@ -332,16 +345,16 @@ namespace CaveDiver
 
                 useAction = delegate (Body body, Item item)
                 {
-                    ItemRegistry.TryGetCustomData<bool>(item, "RegInMouth", out bool regIn); //Add sprite logic for this
+                    ItemRegistry.TryGetCustomData<bool>(item, "RegInMouth", out bool regIn);
                     if (regIn)
                     {
                         ItemRegistry.SetCustomData(item, "RegInMouth", false);
-                        Debug.Log("Removed Regulator");
+                        CUCoreUtils.setMultiWornSprite(item, "Head", dummySprite);
                     }
                     else if (!regIn && !body.disfigured)
                     {
                         ItemRegistry.SetCustomData(item, "RegInMouth", true);
-                        Debug.Log("Inserted Regulator");
+                        CUCoreUtils.setMultiWornSprite(item, "Head", regulatorSprite);
                     }
 
                 },
@@ -384,18 +397,18 @@ namespace CaveDiver
                     ["RegInMouth"] = false
                 },
 
-                useAction = delegate (Body body, Item item) //Add sprite logic for this
+                useAction = delegate (Body body, Item item)
                 {
                     ItemRegistry.TryGetCustomData<bool>(item, "RegInMouth", out bool regIn);
                     if (regIn)
                     {
                         ItemRegistry.SetCustomData(item, "RegInMouth", false);
-                        Debug.Log("Removed Regulator");
+                        CUCoreUtils.setMultiWornSprite(item, "Head", dummySprite);
                     }
                     else if (!regIn && !body.disfigured)
                     {
                         ItemRegistry.SetCustomData(item, "RegInMouth", true);
-                        Debug.Log("Inserted Regulator");
+                        CUCoreUtils.setMultiWornSprite(item, "Head", rebreatherHeadSprite);
                     }
 
                 },
@@ -447,7 +460,6 @@ namespace CaveDiver
                 WornSprite = weightBeltSprite,
                 SpawnFrequency = 1
             }.AddSpawnComponent<WeightBelt>(), weightBeltSprite);
-
         }
     }
 
