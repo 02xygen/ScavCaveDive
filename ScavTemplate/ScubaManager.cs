@@ -16,7 +16,6 @@ namespace CaveDiver
 {
     public static class ScubaManager
     {
-        public static bool regInMouth;
         public static bool hasAirTank;
         public static bool hasRebreather;
         public static bool hasMakshiftFins;
@@ -58,19 +57,62 @@ namespace CaveDiver
             {
                 if (__instance.GetWearable("airtank") != null && __instance.GetWearable("airtank").condition > 0f)
                 {
-                    ItemRegistry.TryGetCustomData<bool>(__instance.GetWearable("airtank"), "RegInMouth", out bool regIn);
-                    if (regIn) __instance.hasScubaGear = true;
+                    Item item = __instance.GetWearable("airtank");
+                    float num = item.decayMultiplier * WorldGeneration.globalDecayRate;
+
+                    ItemRegistry.TryGetCustomData<bool>(item, "RegInMouth", out bool regIn);
+                    if (regIn)
+                    {
+                        if (!__instance.disfigured)
+                        {
+                            __instance.hasScubaGear = true;
+                            
+                            if(__instance.breathing && __instance.inWater)
+                            {
+                                item.condition -= item.Stats.rotSpeed * num * Time.deltaTime * 0.01f;
+                            }
+                        } 
+
+                        else
+                        {
+                            ItemRegistry.SetCustomData(item, "RegInMouth", false);
+                            CUCoreUtils.setMultiWornSprite(item, "Head", AssetLoader.LoadEmbeddedSprite("dummy.png"));
+                        }
+
+                    }
+                    item.condition = Mathf.Clamp(item.condition, 0f, 1f);
+                   
                 }
 
                 else if (__instance.GetWearable("rebreather") != null && __instance.GetWearable("rebreather").condition > 0f)
                 {
-                    ItemRegistry.TryGetCustomData<bool>(__instance.GetWearable("rebreather"), "RegInMouth", out bool regIn);
-                    if (regIn) __instance.hasScubaGear = true;
+
+                    Item item = __instance.GetWearable("rebreather");
+                    float num = item.decayMultiplier * WorldGeneration.globalDecayRate;
+
+                    ItemRegistry.TryGetCustomData<bool>(item, "RegInMouth", out bool regIn);
+                    if (regIn)
+                    {
+                        if (!__instance.disfigured)
+                        {
+                            __instance.hasScubaGear = true;
+
+                            if (__instance.breathing && __instance.inWater)
+                            {
+                                item.condition -= item.Stats.rotSpeed * num * Time.deltaTime * 0.01f;
+                            }
+                        } 
+
+                        else
+                        {
+                            ItemRegistry.SetCustomData(item, "RegInMouth", false);
+                            CUCoreUtils.setMultiWornSprite(item, "Head", AssetLoader.LoadEmbeddedSprite("dummy.png"));
+                        }
+                    }
+                    item.condition = Mathf.Clamp(item.condition, 0f, 1f);
                 }
 
                 else __instance.hasScubaGear = false;
-
-                if (__instance.GetWearable("scubadivinggear") != null) __instance.hasScubaGear = true;
             }
         }
 
@@ -87,6 +129,40 @@ namespace CaveDiver
             }
         }
 
+        [HarmonyPatch(typeof(InvButton), "UpdateGraphic")]
+        public static class RegulatorUIPatch
+        {
+            [HarmonyPostfix]
+            private static void Postfix(InvButton __instance)
+            {
+                if(__instance.slot == 2) // Checks if it is the head slot
+                {
+                    if(__instance?.body.GetWearable("airtank") != null)
+                    {
+                        Item item = __instance.body.GetWearable("airtank");
+                        ItemRegistry.TryGetCustomData<bool>(item, "RegInMouth", out bool regIn);
+                        if (regIn)
+                        {
+                            float alpha = __instance.image.color.a;
+                            __instance.image.color = Color.red.WithAlpha(alpha);
+                        }
+                    }
+
+                    if(__instance?.body.GetWearable("rebreather") != null)
+                    {
+                        Item item = __instance.body.GetWearable("rebreather");
+                        ItemRegistry.TryGetCustomData<bool>(item, "RegInMouth", out bool regIn);
+                        if (regIn)
+                        {
+                            float alpha = __instance.image.color.a;
+                            __instance.image.color = Color.red.WithAlpha(alpha);
+                        }
+                    }
+                }
+            }
+        }
+
+
         [HarmonyPatch(typeof(Body), "FixedUpdate")]
         public static class WaterMovementPatch
         {
@@ -100,7 +176,6 @@ namespace CaveDiver
                 if (liquid != 0)
                 {
                     if (__instance.GetWearable("makeshiftfins") != null) __instance.rb.AddForce(new Vector2(__instance.moveDir.x, 0f) * 1000f);
-                    if (__instance.GetWearable("fins") != null) __instance.rb.AddForce(new Vector2(__instance.moveDir.x,0f) * 2000f);
 
                     if (__instance.GetWearable("bcd") != null)
                     {
@@ -141,21 +216,49 @@ namespace CaveDiver
                 if (__instance?.body?.GetWearable("airtank") != null && __instance?.body?.GetWearable("airtank").condition > 0f)
                 {
                     ItemRegistry.TryGetCustomData<bool>(__instance?.body?.GetWearable("airtank"), "RegInMouth", out bool regIn);
-                    if (regIn) __instance.body.hasScubaGear = true;
+                    if (regIn)
+                    {
+                        __instance.body.hasScubaGear = true;
+                    }
                 }
 
                 else if (__instance?.body?.GetWearable("rebreather") != null && __instance?.body?.GetWearable("rebreather").condition > 0f)
                 {
                     ItemRegistry.TryGetCustomData<bool>(__instance.body.GetWearable("rebreather"), "RegInMouth", out bool regIn);
-                    if (regIn) __instance.body.hasScubaGear = true;
+                    if (regIn)
+                    {
+                        __instance.body.hasScubaGear = true;
+                    }
                 }
 
                 else if(__instance?.body) __instance.body.hasScubaGear = false;
-
-                if (__instance?.body?.GetWearable("scubadivinggear") != null) __instance.body.hasScubaGear = true;
             }
         }
 
+        [HarmonyPatch(typeof(Talker), "impairedSpeech", MethodType.Getter)]
+        public static class RegulatorSpeechPatch
+        {
+            static void Postfix(Talker __instance, ref bool __result)
+            {
+                if (__instance?.body?.GetWearable("airtank") != null && __instance?.body?.GetWearable("airtank").condition > 0f)
+                {
+                    ItemRegistry.TryGetCustomData<bool>(__instance?.body?.GetWearable("airtank"), "RegInMouth", out bool regIn);
+                    if (regIn)
+                    {
+                        __result = true;
+                    }
+                }
+
+                else if (__instance?.body?.GetWearable("rebreather") != null && __instance?.body?.GetWearable("rebreather").condition > 0f)
+                {
+                    ItemRegistry.TryGetCustomData<bool>(__instance.body.GetWearable("rebreather"), "RegInMouth", out bool regIn);
+                    if (regIn)
+                    {
+                        __result = true;
+                    }
+                }
+            }
+        }
 
         [HarmonyPatch(typeof(PlayerCamera), "HandleScreenShaders")]
         public static class BlurPatch
@@ -241,7 +344,8 @@ namespace CaveDiver
             [HarmonyPrefix]
             private static void Prefix(LiquidAffect __instance)
             {
-                if (__instance.body) __instance.body.hasScubaGear = false;
+                if (__instance?.body?.GetWearable("fins")) __instance.body.hasScubaGear = true;
+                else if (__instance.body) __instance.body.hasScubaGear = false;
             }
         }
     }

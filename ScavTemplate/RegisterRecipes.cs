@@ -214,11 +214,10 @@ namespace CaveDiver
                     id = "airtank",
                     amount = 1,
                     isLiquid = false,
-                    resultCondition = 1f
+                    resultCondition = 0f
                 },
                 items = new List<RecipeItem>
             {
-                new RecipeItem(0f) { specific = true, specificId = "oxygencrystalshard" },
                 new RecipeItem(0f) { specific = true, specificId = "scrappanel" },
                 new RecipeItem(0f) { specific = true, specificId = "scrappanel" },
                 new RecipeItem(0f) { specific = true, specificId = "scraptube" },
@@ -250,7 +249,7 @@ namespace CaveDiver
                 new RecipeItem(0f) { specific = true, specificId = "plasticchunk" },
                 new RecipeItem(0f) { specific = true, specificId = "bundleofwires" },
                 new RecipeItem(0f) { specific = true, specificId = "bundleofwires" },
-                new RecipeItem(0f) { specific = true, specificId = "circuitboard" },
+                new RecipeItem(0.9f) { specific = true, specificId = "circuitboard" },
                 new RecipeItem(10f) { specific = true, specificId = "biochem", isLiquid = true },
                 new RecipeItem(0f){ quality = "hammering", destroyItem = false },
                 new RecipeItem(0f){ quality = "cutting", destroyItem = false }

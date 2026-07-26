@@ -44,7 +44,7 @@ namespace CaveDiver
                 if (__instance.bloodOxygen < 45f && __instance.inWater)
                 {
                     if(__instance.GetWearable("airtank") != null || __instance.GetWearable("rebreather") != null
-                        || __instance.GetWearable("scubadivinggear") != null && status.amount >= 0
+                         && status.amount >= 0
                         && __instance.conscious && __instance.limbs[1].muscleHealth > 5f) // MIGHT HAVE ISSUES
                     {
                         status.amount = CoughUpLiquid(status, __instance);
@@ -231,16 +231,21 @@ namespace CaveDiver
             {
                 Drowning.wasSubmerged = false;
                 Drowning.timeWhenSurfaced = Time.time;
-                if (__instance.bloodOxygen <= 90 && __instance.GetStatus<AspirationStatus>().amount == 0) // Aspiration check not working?
-                {
-                    Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.gasp" + Random.Range(2, 4).ToString()), __instance.transform.position, true, false, null, 0.5f, 1f, false, false);
-                }
+                
             }
 
             if (Time.time - Drowning.timeWhenSubmerged > minBreathHoldTime) Drowning.canAspirate = true;
             else Drowning.canAspirate = false;
-            
-            if (Time.time - Drowning.timeWhenSurfaced > minCoughTime) Drowning.canCough = true;
+
+            if (Time.time - Drowning.timeWhenSurfaced > minCoughTime)
+            {
+                if (__instance.bloodOxygen <= 90 && __instance.GetStatus<AspirationStatus>().amount == 0f && Drowning.canCough == false) // Drowning.canCough check should make it so this only plays once.
+                {
+                    Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.gasp" + Random.Range(2, 4).ToString()), __instance.transform.position, true, false, null, 0.5f, 1f, false, false);
+                }
+
+                Drowning.canCough = true;
+            } 
             else Drowning.canCough = false;
             
         }

@@ -170,12 +170,12 @@ namespace CaveDiver
             ItemRegistry.Register("divingmask", new CustomItemInfo
             {
                 fullName = "Diving Mask",
-                description = "An air-tight mask that covers your eyes and nose. Can be cleared with a sharp exhale through the nose (Use Item).",
+                description = "An air-tight mask that covers your eyes and nose. Are prone to leaking below 50% durability. Can be cleared with a sharp exhale through the nose (Use Item).",
                 category = "utility",
                 slotRotation = 0f,
                 usable = true,
                 usableOnLimb = false,
-                decayMinutes = 180f,
+                decayMinutes = 80f,
                 destroyAtZeroCondition = true,
                 decayInfo = (byte)(
                 ItemInfo.DecayType.NoDecayWhenNotWorn |
@@ -218,12 +218,12 @@ namespace CaveDiver
             ItemRegistry.Register("swimgoggles", new CustomItemInfo
             {
                 fullName = "Swim Goggles",
-                description = "Air-tight goggles that cover your eyes. Cannot be cleared since it doesn't cover your nose.",
+                description = "Air-tight goggles that cover your eyes. Are prone to leaking below 50% durability. Cannot be cleared since it doesn't cover your nose.",
                 category = "utility",
                 slotRotation = 0f,
                 usable = true,
                 usableOnLimb = false,
-                decayMinutes = 80f,
+                decayMinutes = 50f,
                 destroyAtZeroCondition = true,
                 decayInfo = (byte)(
                 ItemInfo.DecayType.NoDecayWhenNotWorn |
@@ -288,12 +288,12 @@ namespace CaveDiver
             ItemRegistry.Register("fins", new CustomItemInfo
             {
                 fullName = "Fins",
-                description = "A pair of swim fins. Greatly improves movement in liquids.",
+                description = "A pair of swim fins. Greatly improves movement in liquids and makes you resistant to currents.",
                 category = "utility",
                 slotRotation = 0f,
                 usable = false,
                 usableOnLimb = false,
-                decayMinutes = 180f,
+                decayMinutes = 120f,
                 destroyAtZeroCondition = true,
                 decayInfo = (byte)(
                ItemInfo.DecayType.NoDecayWhenNotWorn |
@@ -324,10 +324,10 @@ namespace CaveDiver
                 slotRotation = 0f,
                 usable = true,
                 usableOnLimb = false,
-                decayMinutes = 120f,
+                decayMinutes = 30f,
                 destroyAtZeroCondition = false,
                 decayInfo = (byte)(
-               ItemInfo.DecayType.NoDecayWhenNotWorn
+               ItemInfo.DecayType.NoDecayWhenNotWorn | ItemInfo.DecayType.NoDecayWithoutContainerItem
            ),
                 wearable = true,
                 wearableCanBeHeld = true,
@@ -374,14 +374,14 @@ namespace CaveDiver
                 slotRotation = 0f,
                 usable = true,
                 usableOnLimb = false,
-                decayMinutes = 180f,
+                decayMinutes = 80f,
                 Battery = new BatteryProperties
                 {
                     Preset = BatteryItem.BatteryPreset.Large
                 },
                 decayInfo = (byte)(
                ItemInfo.DecayType.NoDecayWhenNotWorn |
-               ItemInfo.DecayType.BatteryDecay
+               ItemInfo.DecayType.BatteryDecay | ItemInfo.DecayType.NoDecayWithoutContainerItem
            ),
                 wearable = true,
                 wearableCanBeHeld = true,
@@ -436,15 +436,15 @@ namespace CaveDiver
                 SpawnFrequency = 0
             }.AddSpawnComponent<ClosedCellFoam>(), closedCellFoamSprite);
 
-            ItemRegistry.Register("weightbelt", new CustomItemInfo
+            ItemRegistry.Register("weightedharness", new CustomItemInfo
             {
-                fullName = "Weight Belt",
-                description = "A belt fitted with heavy weights. Decreases bouyancy when worn, making you sink quickly in liquids. Is much more effective if you relax your body (ragdoll).",
+                fullName = "Weighted Harness",
+                description = "A harness fitted with heavy weights. Decreases bouyancy when worn, making you sink quickly in liquids. Is much more effective if you relax your body (ragdoll).",
                 category = "utility",
                 slotRotation = 0f,
                 usable = false,
                 usableOnLimb = false,
-                decayMinutes = 180f,
+                decayMinutes = 120f,
                 destroyAtZeroCondition = true,
                 decayInfo = (byte)(
                ItemInfo.DecayType.NoDecayWhenNotWorn
@@ -453,7 +453,7 @@ namespace CaveDiver
                 wearableCanBeHeld = true,
                 weight = 1.5f,
                 desiredWearLimb = "DownTorso",
-                wearSlotId = "belt",
+                wearSlotId = "harness",
                 wearableHitDurabilityLossMultiplier = 0.25f,
                 wearableVisualOffset = 2,
                 value = 12,

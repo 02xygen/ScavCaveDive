@@ -1,16 +1,4 @@
-﻿Bubbles,
-bubble geysers,
-aspiration status,
-cyanosis,
-diving goggles,
-diving mask,
-air bladder,
-air tank,
-rebreather,
-life jacket,
-Buoyancy Control Device,
-makeshift fins,
-plastic fins,
+﻿
 harpoons,
 harpoon gun.
 

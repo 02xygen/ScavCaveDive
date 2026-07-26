@@ -30,8 +30,6 @@ namespace CaveDiver
 
             else __instance.hasScubaGear = false;
 
-            if (__instance.GetWearable("scubadivinggear") != null) __instance.hasScubaGear = true;
-
             if (__instance.inWater && __instance.hasScubaGear && __instance.breathing)
             {
                 float rate = __instance.respiratoryRate;
