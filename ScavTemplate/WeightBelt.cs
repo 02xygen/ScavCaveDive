@@ -18,7 +18,7 @@ namespace CaveDiver
             var cell = WorldGeneration.world.WorldToBlockPos(new Vector2(PlayerCamera.main.body.limbs[1].transform.position.x, PlayerCamera.main.body.limbs[1].transform.position.y));
             byte liquid = FluidManager.main.GetLiquid(cell.x, cell.y);
 
-            if (liquid != 0 && PlayerCamera.main.body.HasWearable("weightbelt"))
+            if (liquid != 0 && PlayerCamera.main.body.HasWearable("weightedharness"))
             {
 
                 if (!PlayerCamera.main.body.standing)

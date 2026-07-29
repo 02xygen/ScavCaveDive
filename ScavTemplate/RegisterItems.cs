@@ -45,7 +45,8 @@ namespace CaveDiver
 			Sprite BCDWornSprite = AssetLoader.LoadEmbeddedSprite("BCDWorn.png");
 			Sprite rebreatherTorsoSprite = AssetLoader.LoadEmbeddedSprite("rebreatherTorso.png");
 			Sprite rebreatherHeadSprite = AssetLoader.LoadEmbeddedSprite("rebreatherHead.png");
-			Sprite weightBeltSprite = AssetLoader.LoadEmbeddedSprite("weightBelt.png");
+			Sprite weightedHarnessSprite = AssetLoader.LoadEmbeddedSprite("weightedHarnessIcon.png");
+			Sprite weightedHarnessWornSprite = AssetLoader.LoadEmbeddedSprite("weightedHarnessWorn.png");
 
             
 			Sprite dummySprite = AssetLoader.LoadEmbeddedSprite("dummy.png");
@@ -452,14 +453,14 @@ namespace CaveDiver
                 wearable = true,
                 wearableCanBeHeld = true,
                 weight = 1.5f,
-                desiredWearLimb = "DownTorso",
+                desiredWearLimb = "UpTorso",
                 wearSlotId = "harness",
                 wearableHitDurabilityLossMultiplier = 0.25f,
                 wearableVisualOffset = 2,
                 value = 12,
-                WornSprite = weightBeltSprite,
+                WornSprite = weightedHarnessWornSprite,
                 SpawnFrequency = 1
-            }.AddSpawnComponent<WeightBelt>(), weightBeltSprite);
+            }.AddSpawnComponent<WeightBelt>(), weightedHarnessSprite);
         }
     }
 

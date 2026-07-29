@@ -55,6 +55,8 @@
     <None Remove="Sprites\swimGogglesHead.png" />
     <None Remove="Sprites\swimGogglesIcon.png" />
     <None Remove="Sprites\weightBelt.png" />
+    <None Remove="Sprites\WeightedHarnessIcon.png" />
+    <None Remove="Sprites\weightedHarnessWorn.png" />
     <None Remove="Sprites\wetsuitCrus.png" />
     <None Remove="Sprites\wetsuitDownArm.png" />
     <None Remove="Sprites\wetsuitDownTorso.png" />
@@ -105,6 +107,8 @@
     <EmbeddedResource Include="Sprites\swimGogglesHead.png" />
     <EmbeddedResource Include="Sprites\swimGogglesIcon.png" />
     <EmbeddedResource Include="Sprites\weightBelt.png" />
+    <EmbeddedResource Include="Sprites\weightedHarnessIcon.png" />
+    <EmbeddedResource Include="Sprites\weightedHarnessWorn.png" />
     <EmbeddedResource Include="Sprites\wetsuitCrus.png" />
     <EmbeddedResource Include="Sprites\wetsuitDownArm.png" />
     <EmbeddedResource Include="Sprites\wetsuitDownTorso.png" />

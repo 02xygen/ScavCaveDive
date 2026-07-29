@@ -1,4 +1,10 @@
-﻿
+﻿BUGS TO FIX
+
+Cyanosis bug
+
+ASG Crafting Bug
+
+
 harpoons,
 harpoon gun.
 

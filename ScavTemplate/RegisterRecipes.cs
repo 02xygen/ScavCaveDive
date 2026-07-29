@@ -192,13 +192,15 @@ namespace CaveDiver
                 category = Recipes.RecipeCategory.Utilities,
                 result = new RecipeResult
                 {
-                    id = "weightbelt",
+                    id = "weightedharness",
                     amount = 1,
                     isLiquid = false,
                     resultCondition = 1f
                 },
                 items = new List<RecipeItem>
             {
+                new RecipeItem(0f) { specific = true, specificId = "canvas" },
+                new RecipeItem(0f) { specific = true, specificId = "canvas" },
                 new RecipeItem(0f) { specific = true, specificId = "scrapcube" },
                 new RecipeItem(0f) { specific = true, specificId = "scrapcube" },
                 new RecipeItem(0f) { specific = true, specificId = "belt" },

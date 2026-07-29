@@ -39,20 +39,40 @@ namespace CaveDiver
 
             if (__instance.alive)
             {
+                Item airtank = __instance?.GetWearable("airtank");
+                Item rebreather = __instance?.GetWearable("rebreather");
+                ItemRegistry.TryGetCustomData<bool>(airtank, "RegInMouth", out bool regIn);
+                ItemRegistry.TryGetCustomData<bool>(rebreather, "RegInMouth", out bool RebRegIn);
+
                 HandleBreathHoldTime(__instance);
 
                 if (__instance.bloodOxygen < 45f && __instance.inWater)
                 {
-                    if(__instance.GetWearable("airtank") != null || __instance.GetWearable("rebreather") != null
-                         && status.amount >= 0
-                        && __instance.conscious && __instance.limbs[1].muscleHealth > 5f) // MIGHT HAVE ISSUES
+                    if(status.amount > 0 && __instance.conscious && __instance.limbs[1].muscleHealth > 5f
+                        && (regIn && airtank.condition > 0f) || (RebRegIn && rebreather.condition > 0f))
                     {
                         status.amount = CoughUpLiquid(status, __instance);
                     }
 
                     else if(canAspirate)
                     {
-                        status.amount = Aspirate(status, __instance);
+                        if(airtank)
+                        {
+                            if (!regIn || airtank.condition == 0)
+                            {
+                                status.amount = Aspirate(status, __instance);
+                                
+                            }      
+                        }
+                        else if(rebreather)
+                        {
+                            if(!RebRegIn || rebreather.condition == 0)
+                            {
+                                status.amount = Aspirate(status, __instance);
+                                
+                            }
+                        }
+                        else status.amount = Aspirate(status, __instance);
                     }
                     
                 }
@@ -61,9 +81,6 @@ namespace CaveDiver
                 {
                     status.amount = CoughUpLiquid(status, __instance);
                 }
-
-
-
 
                 if (status.aspirating)
                 {
@@ -93,6 +110,7 @@ namespace CaveDiver
         {
             string text = __instance.text.text;
             if (__instance?.body == null) return;
+            if (__instance.trader) return;
             AspirationStatus status = __instance.body.GetStatus<AspirationStatus>();
 
             if (status.amount > 0)
@@ -118,11 +136,13 @@ namespace CaveDiver
 
             for (int i = lastVisibleCount; i < visableCount; i++)
             {
-                if(__instance.body.inWater && __instance.body.GetWearable("rebreather") == null)
+                Item rebreather = __instance.body.GetWearable("rebreather");
+                ItemRegistry.TryGetCustomData<bool>(rebreather, "RegInMouth", out bool regIn);
+                if (__instance.body.inWater && rebreather == null)
                 {
                     Bubbles.BubbleSingle(__instance.body.limbs[0].transform);
                 }
-                
+                else if(!regIn && __instance.body.inWater) Bubbles.BubbleSingle(__instance.body.limbs[0].transform);
             }
 
             lastVisibleCounts[__instance] = visableCount;
@@ -239,7 +259,7 @@ namespace CaveDiver
 
             if (Time.time - Drowning.timeWhenSurfaced > minCoughTime)
             {
-                if (__instance.bloodOxygen <= 90 && __instance.GetStatus<AspirationStatus>().amount == 0f && Drowning.canCough == false) // Drowning.canCough check should make it so this only plays once.
+                if (__instance.bloodOxygen <= 90 && __instance.GetStatus<AspirationStatus>().amount == 0f && Drowning.canCough == false && Time.time - Drowning.timeWhenSubmerged > minCoughTime) // Drowning.canCough check should make it so this only plays once.
                 {
                     Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.player.gasp" + Random.Range(2, 4).ToString()), __instance.transform.position, true, false, null, 0.5f, 1f, false, false);
                 }
@@ -247,6 +267,7 @@ namespace CaveDiver
                 Drowning.canCough = true;
             } 
             else Drowning.canCough = false;
+
             
         }
             

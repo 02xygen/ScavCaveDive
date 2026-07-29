@@ -240,7 +240,7 @@ namespace CaveDiver
         {
             static void Postfix(Talker __instance, ref bool __result)
             {
-                if (__instance?.body?.GetWearable("airtank") != null && __instance?.body?.GetWearable("airtank").condition > 0f)
+                if (__instance?.body?.GetWearable("airtank") != null)
                 {
                     ItemRegistry.TryGetCustomData<bool>(__instance?.body?.GetWearable("airtank"), "RegInMouth", out bool regIn);
                     if (regIn)
@@ -249,7 +249,7 @@ namespace CaveDiver
                     }
                 }
 
-                else if (__instance?.body?.GetWearable("rebreather") != null && __instance?.body?.GetWearable("rebreather").condition > 0f)
+                if (__instance?.body?.GetWearable("rebreather") != null)
                 {
                     ItemRegistry.TryGetCustomData<bool>(__instance.body.GetWearable("rebreather"), "RegInMouth", out bool regIn);
                     if (regIn)
@@ -290,12 +290,14 @@ namespace CaveDiver
             [HarmonyPrefix]
             private static bool Prefix(WorldGeneration __instance) // Maybe make a "super flooded modifier, though lumalgae spawns will have to be removed as they can cause impossible scenarios."
             {
-                var flooded = LayerModifier.availableModifiers[5];
-                var flooded2 = LayerModifier.availableModifiers[5];
-                flooded.Initialize(__instance);
-                flooded2.Initialize(__instance);
-                flooded.active = true;
-                flooded2.active = true;
+                if (PlayerPrefs.GetInt("ForceFlood_Enabled", 1) == 0) return true;
+
+                for (int i = 1; i < Mathf.Clamp(PlayerPrefs.GetInt("ForceFlood_Strength", 2) + (WorldGeneration.world.biomeDepth) * PlayerPrefs.GetInt("FloodRamp_Enabled", 0), 1, 10); i++)
+                {
+                    var flooded = LayerModifier.availableModifiers[5];
+                    flooded.Initialize(__instance);
+                    flooded.active = true;
+                }
                 __instance.layerPrefix = Locale.GetOther("layermodifier5");
                 __instance.layerDescription = Locale.GetOther("layermodifier5dsc");
                 return false;

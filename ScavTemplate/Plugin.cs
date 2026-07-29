@@ -31,6 +31,7 @@ namespace CaveDiver
             sm.LoadAudio();
             RegisterItems ri = gameObject.AddComponent<RegisterItems>();
             RegisterRecipes rr = gameObject.AddComponent<RegisterRecipes>();
+            RegisterSettings rs = gameObject.AddComponent<RegisterSettings>();
        
             Logger.LogInfo($"Plugin {ModName} is loaded!");
         }
