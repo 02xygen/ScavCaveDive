@@ -292,12 +292,19 @@ namespace CaveDiver
             {
                 if (PlayerPrefs.GetInt("ForceFlood_Enabled", 1) == 0) return true;
 
+                for (int i = 0; i < __instance.width; i++)
+                {
+                    Vector2Int pos = new Vector2Int(i, -461);
+                    __instance.SetBlockNoUpdate(pos, 12);
+                }
+
                 for (int i = 1; i < Mathf.Clamp(PlayerPrefs.GetInt("ForceFlood_Strength", 2) + (WorldGeneration.world.biomeDepth) * PlayerPrefs.GetInt("FloodRamp_Enabled", 0), 1, 10); i++)
                 {
                     var flooded = LayerModifier.availableModifiers[5];
                     flooded.Initialize(__instance);
                     flooded.active = true;
                 }
+
                 __instance.layerPrefix = Locale.GetOther("layermodifier5");
                 __instance.layerDescription = Locale.GetOther("layermodifier5dsc");
                 return false;

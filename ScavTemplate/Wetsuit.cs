@@ -36,8 +36,10 @@ namespace CaveDiver
             {
                 item.Stats.wearableIsolation = 0.1f;
             }
-            
-           
+
+            float num =  WorldGeneration.globalDecayRate;
+            item.condition -= item.Stats.rotSpeed * num * Time.deltaTime * 0.01f;
+            item.condition = Mathf.Clamp(item.condition, 0f, 1f);
         }
     }
 }

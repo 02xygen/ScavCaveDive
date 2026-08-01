@@ -43,13 +43,31 @@ namespace CaveDiver
             "Increase Flooding amount every layer (up to x10)",
             "Causes every sebsequent layer to generate with a stronger Flooded modifier.",
             Setting.SettingCategory.Game,
-            PlayerPrefs.GetInt("FloodRamp_Enabled", 1) == 1,
+            PlayerPrefs.GetInt("FloodRamp_Enabled", 0) == 1,
             value =>
             {
                 PlayerPrefs.SetInt("ForceRamp_Enabled", value ? 1 : 0);
                 PlayerPrefs.Save();
             }
             ));
+
+            /*
+            ModOptionsRegistry.Register(ModOptionDefinition.Float(
+            "caveDiver.audio.breatheVolume",
+            "Breathing sounds volume",
+            "Scales the volume of the breathing noises the play when using scuba equipment.",
+            Setting.SettingCategory.Audio,
+            PlayerPrefs.GetFloat("BreathingSounds_volume", 0.75f),
+            0f,
+            1f,
+            value =>
+            {
+                PlayerPrefs.SetFloat("Glassworks_ClinkVolume", value);
+                PlayerPrefs.Save();
+            },
+            value => Mathf.RoundToInt(value * 100f) + "%"
+            ));
+            */
         }
     }
 }

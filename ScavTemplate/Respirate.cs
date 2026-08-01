@@ -38,20 +38,20 @@ namespace CaveDiver
                 {
                     if(inhale)
                     {
-                        Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.regulator.inhale"), __instance.transform.position, true, true, null, 0.75f, 0.85f);
+                        Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.regulator.inhale"), __instance.transform.position, true, true, null, PlayerPrefs.GetFloat("BreathingSounds_Volume", 0.75f), 0.85f);
                         inhale = false;
                     }
 
                     else if(!inhale && __instance.GetWearable("rebreather") == null)
                     {
-                        Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.regulator.exhale"), __instance.transform.position, true, true, null, 0.75f, 0.85f);
+                        Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.regulator.exhale"), __instance.transform.position, true, true, null, PlayerPrefs.GetFloat("BreathingSounds_Volume", 0.75f), 0.85f);
                         Bubbles.BubbleBurst(__instance.limbs[0].transform);
                         inhale = true;
                     }
 
                     else if (!inhale && __instance.GetWearable("rebreather") != null)
                     {
-                        Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.rebreather.exhale"), __instance.transform.position, true, true, null, 0.75f, 0.85f);
+                        Sound.Play(AssetLoader.GetCachedAudioClip("caveDiver.rebreather.exhale"), __instance.transform.position, true, true, null, PlayerPrefs.GetFloat("BreathingSounds_Volume", 0.75f), 0.85f);
                         inhale = true;
                     }
 

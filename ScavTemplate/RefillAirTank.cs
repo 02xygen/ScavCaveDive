@@ -17,7 +17,7 @@ namespace CaveDiver
         {
             usable = gameObject.AddComponent<UsableObject>();
             usable.didLangString = true;
-            usable.toggleString = "Refill air tank. (Will break the pump)";
+            usable.toggleString = "Refill air tank. (Will break the pump) You need to be holding the tank in your hands to refill it.";
         }
 
         public void OnUse()

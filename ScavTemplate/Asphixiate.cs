@@ -22,7 +22,7 @@ namespace CaveDiver
             private static void Postfix(Body __instance)
             {
 
-                    GameObject.Instantiate(blush);
+                    GameObject.Instantiate(blush); // NOT WORKING BUGGED!!!
                     Sprite cyanosis = AssetLoader.LoadEmbeddedSprite("cyanosis.png");
                     blush.AddComponent<SpriteRenderer>().sprite = cyanosis;
                     blush.GetComponent<SpriteRenderer>().sortingOrder = 52;

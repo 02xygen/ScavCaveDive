@@ -93,7 +93,7 @@ namespace CaveDiver
             ItemRegistry.Register("bcd", new CustomItemInfo
             {
                 fullName = "Buoyancy Control Device",
-                description = "A wearable device that automatically maintains neutral bouyancy.",
+                description = "A wearable device that automatically maintains neutral bouyancy. It allow allows the wearer to freely float or sink at will, drastically increasing maneuverability in liquids",
                 category = "utility",
                 slotRotation = 0f,
                 usable = true,
@@ -132,9 +132,8 @@ namespace CaveDiver
 				tags = "cangetwet",
 				destroyAtZeroCondition = true,
 				decayInfo = (byte)(
-				ItemInfo.DecayType.NoDecayWhenNotWorn |
-				ItemInfo.DecayType.NoDecayWhenStill
-			),
+                ItemInfo.DecayType.NoDecayWithoutContainerItem
+            ),
 				wearable = true,
                 wearableCanBeHeld = true,
                 weight = 0.5f,
@@ -171,7 +170,7 @@ namespace CaveDiver
             ItemRegistry.Register("divingmask", new CustomItemInfo
             {
                 fullName = "Diving Mask",
-                description = "An air-tight mask that covers your eyes and nose. Are prone to leaking below 50% durability. Can be cleared with a sharp exhale through the nose (Use Item).",
+                description = "An air-tight mask that covers your eyes and nose, letting you see clearly underwater. Are prone to leaking below 50% durability. Can be cleared with a sharp exhale through the nose (Use Item).",
                 category = "utility",
                 slotRotation = 0f,
                 usable = true,
@@ -219,7 +218,7 @@ namespace CaveDiver
             ItemRegistry.Register("swimgoggles", new CustomItemInfo
             {
                 fullName = "Swim Goggles",
-                description = "Air-tight goggles that cover your eyes. Are prone to leaking below 50% durability. Cannot be cleared since it doesn't cover your nose.",
+                description = "Air-tight goggles that cover your eyes, letting you see clearly underwater. Are prone to leaking below 50% durability. Cannot be cleared since it doesn't cover your nose.",
                 category = "utility",
                 slotRotation = 0f,
                 usable = true,
@@ -320,7 +319,7 @@ namespace CaveDiver
             ItemRegistry.Register("airtank", new CustomItemInfo
             {
                 fullName = "Air Tank",
-                description = "A canister full of pressurized air, with a regulator attached. When worn, indefintely allows breathing and stamina regeneration when submerged. Don't forget to put the regulator in your mouth! (Use Item)",
+                description = "A canister full of pressurized air, with a regulator attached. When worn, indefintely allows breathing and stamina regeneration when submerged. Can be pressurized using the pumps found in Lifepods. Don't forget to put the regulator in your mouth! (Use Item)",
                 category = "utility",
                 slotRotation = 0f,
                 usable = true,
