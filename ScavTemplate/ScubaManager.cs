@@ -290,8 +290,10 @@ namespace CaveDiver
             [HarmonyPrefix]
             private static bool Prefix(WorldGeneration __instance) // Maybe make a "super flooded modifier, though lumalgae spawns will have to be removed as they can cause impossible scenarios."
             {
-                if (PlayerPrefs.GetInt("ForceFlood_Enabled", 1) == 0) return true;
+                Recipes.recipes[70].INT = 40; // Sets ASG recipe int requirement to 40
 
+                if (PlayerPrefs.GetInt("ForceFlood_Enabled", 1) == 0) return true;
+               
                 for (int i = 0; i < __instance.width; i++)
                 {
                     Vector2Int pos = new Vector2Int(i, -461);
@@ -355,6 +357,21 @@ namespace CaveDiver
             {
                 if (__instance?.body?.GetWearable("fins")) __instance.body.hasScubaGear = true;
                 else if (__instance.body) __instance.body.hasScubaGear = false;
+            }
+        }
+
+
+        [HarmonyPatch(typeof(Item), "SetupItems")]
+        public static class ASGSpawnPatch
+        {
+            [HarmonyPostfix]
+            private static void Postfix()
+            {
+                Item.GlobalItems.TryGetValue("scubadivinggear", out ItemInfo asg);
+                //Debug.Log(Item.GlobalItems.Count);
+                //if (asg != null) Debug.Log("Found ASG");
+                asg.decayMinutes = 0;
+                asg.category = "unused";
             }
         }
     }

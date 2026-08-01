@@ -2,12 +2,6 @@
 
 Cyanosis bug
 
-ASG Crafting Bug
-
-Wetsuit should not decay faster when wet. FIXED
-
-Water will not drain from flooded layers FIXED
-
 Air Tank and Rebreather Regulator loading bug
 
 REQUESTED FEATURES:
